@@ -54,7 +54,7 @@
    MASTER NAVIGATION — IDH branded style
 ══════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%}
+html,body{min-height:100%;overflow-x:hidden}
 body{font-family:'Sora',sans-serif;background:#F5F2EB;color:#14151A;-webkit-font-smoothing:antialiased}
 
 .master-nav{
@@ -806,6 +806,151 @@ body { overflow-x: hidden; }
   [data-page="proj"] .next-desc { font-size: 10px !important; }
   [data-page="proj"] .next-code { font-size: 9px !important; }
 }
+
+/* ══════════════════════════════════════════════════════
+   MOBILE BOTTOM TAB BAR
+══════════════════════════════════════════════════════ */
+.mobile-tab-bar {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 56px;
+  background: #14151A;
+  border-top: 3px solid #C8102E;
+  z-index: 2000;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+}
+.mobile-tab-bar button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: rgba(255,255,255,0.45);
+  font: 600 9px/1 'Sora', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 6px 4px 4px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+  margin: 0;
+}
+.mobile-tab-bar button.active { color: #C8102E; }
+.mobile-tab-bar button .mtab-icon { font-size: 18px; line-height: 1; }
+.mobile-tab-bar button .mtab-label { font-size: 9px; }
+
+/* ══════════════════════════════════════════════════════
+   MOBILE RESPONSIVE ≤ 640px
+══════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* Hide top nav, show bottom tab bar */
+  .master-nav { display: none !important; }
+  .mobile-tab-bar { display: flex; }
+
+  /* Push content above bottom tab bar */
+  body { padding-bottom: 56px; }
+
+  /* Page wrap and content */
+  [data-page="proj"] .wrap { padding: 0 0 0; }
+  .content { padding: 12px 12px 0; }
+
+  /* Header */
+  .header { padding: 12px 12px 10px; flex-direction: column; gap: 8px; }
+  .header-left { width: 100%; }
+  h1 { font-size: 16px !important; }
+  .sub { font-size: 9.5px !important; }
+
+  /* Timeline */
+  [data-page="proj"] .tl-bar { gap: 2px; }
+  [data-page="proj"] .tl-w { height: 22px; font-size: 7px; }
+
+  /* KPI Row: 2 columns */
+  .kpi-row { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; margin-bottom: 10px; }
+  [data-page="proj"] .kpi { padding: 11px 10px 9px; }
+  [data-page="proj"] .kpi-val { font-size: 20px; }
+  [data-page="proj"] .kpi-lbl { font-size: 9px; }
+
+  /* Main grid: 1 column */
+  .main { grid-template-columns: 1fr !important; gap: 10px; margin-bottom: 10px; }
+
+  /* Deliverables table: hide less important columns */
+  [data-page="proj"] .dtbl th:nth-child(3),
+  [data-page="proj"] .dtbl td:nth-child(3),
+  [data-page="proj"] .dtbl th:nth-child(5),
+  [data-page="proj"] .dtbl td:nth-child(5),
+  [data-page="proj"] .dtbl th:nth-child(6),
+  [data-page="proj"] .dtbl td:nth-child(6),
+  [data-page="proj"] .dtbl th:nth-child(7),
+  [data-page="proj"] .dtbl td:nth-child(7) { display: none !important; }
+
+  /* Bottom grid: 1 column */
+  .bottom { grid-template-columns: 1fr !important; gap: 10px; }
+
+  /* S-Curve stats: 3 cols */
+  [data-page="proj"] .sc-stats { flex-wrap: wrap; }
+  [data-page="proj"] .sc-stat { flex: 0 0 33.33%; border-right: none !important; }
+
+  /* Footer */
+  .footer-bar { padding: 8px 12px; font-size: 8px; flex-direction: column; gap: 3px; }
+
+  /* Page 2 */
+  #page-act .wrap { padding: 12px 12px 16px; }
+  .kpi-strip { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+  .kpi-strip .kpi-val { font-size: 20px; }
+
+  /* Tabs: horizontal scroll */
+  .nav-tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; gap: 0; }
+  .tab { padding: 9px 12px; font-size: 10px; flex-shrink: 0; }
+
+  /* Slicer: stacked */
+  .slicer-bar { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 10px; }
+  .slicer-label { font-size: 8px; }
+  .slicer-btn { font-size: 9px; padding: 5px 9px; }
+
+  /* Activity table → card layout */
+  .act-table thead { display: none; }
+  .act-table, .act-table tbody { display: block; }
+  .act-table tr {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 3px 6px;
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .act-table td { display: block; padding: 0; border: none; }
+  .act-table td:nth-child(4) { grid-column: 1 / -1; padding-top: 2px; }
+  .act-table td:nth-child(8) { display: none; }
+
+  /* Grids: 1 column */
+  .dep-grid { grid-template-columns: 1fr !important; }
+  .resp-grid { grid-template-columns: 1fr !important; }
+  .stand-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ══════════════════════════════════════════════════════
+   MEDIUM MOBILE 641–900px
+══════════════════════════════════════════════════════ */
+@media (min-width: 641px) and (max-width: 900px) {
+  .master-nav { padding: 0 16px; }
+  .master-nav-dept-parent { display: none; }
+  .master-nav-right { display: none; }
+  [data-page="proj"] .wrap { padding: 0 0 40px; }
+  .content { padding: 14px 16px 0; }
+  .kpi-row { grid-template-columns: repeat(3, 1fr) !important; }
+  .main { grid-template-columns: 1fr !important; }
+  .bottom { grid-template-columns: 1fr !important; }
+  .kpi-strip { grid-template-columns: repeat(4, 1fr) !important; }
+  .dep-grid { grid-template-columns: 1fr 1fr !important; }
+  .resp-grid { grid-template-columns: 1fr !important; }
+  .stand-grid { grid-template-columns: 1fr 1fr !important; }
+}
+
 </style>
 </head>
 <body>
@@ -827,6 +972,18 @@ body { overflow-x: hidden; }
     <span class="master-nav-badge">B2B · Scan Management · El Hana</span>
     <span class="master-nav-live">Live Dashboard</span>
   </div>
+</div>
+
+<!-- ── MOBILE BOTTOM TAB BAR ──────────────────────────────────────── -->
+<div class="mobile-tab-bar" id="mobileTabBar">
+  <button class="active" onclick="switchPage('proj',this)" id="mtab-proj">
+    <span class="mtab-icon">📊</span>
+    <span class="mtab-label">Dashboard</span>
+  </button>
+  <button onclick="switchPage('act',this)" id="mtab-act">
+    <span class="mtab-icon">📋</span>
+    <span class="mtab-label">Activities</span>
+  </button>
 </div>
 
 <!-- ══ PAGE 1: PROJECT DASHBOARD ══ -->
@@ -1036,8 +1193,14 @@ body { overflow-x: hidden; }
 function switchPage(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.master-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab-bar button').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  btn.classList.add('active');
+  if (btn) btn.classList.add('active');
+  const mTab = document.getElementById('mtab-' + name);
+  if (mTab) mTab.classList.add('active');
+  if (name === 'proj' && typeof drawSCurve === 'function') {
+    requestAnimationFrame(() => requestAnimationFrame(drawSCurve));
+  }
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1212,10 +1375,25 @@ function drawSCurve(){
   SCURVE.planned.forEach((v,i)=>{i===0?ctx.moveTo(xP(i),yP(v)):ctx.lineTo(xP(i),yP(v));});ctx.stroke();
   SCURVE.planned.forEach((v,i)=>{ctx.beginPath();ctx.arc(xP(i),yP(v),i===SCURVE.todayIdx?5:2,0,Math.PI*2);ctx.fillStyle=i===SCURVE.todayIdx?DARK:'#fff';ctx.strokeStyle=DARK;ctx.lineWidth=1.5;ctx.fill();ctx.stroke();});
   if(actualPts.length>1){ctx.beginPath();ctx.strokeStyle=RED;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.setLineDash([]);actualPts.forEach((pt,idx)=>{idx===0?ctx.moveTo(xP(pt.i),yP(pt.v)):ctx.lineTo(xP(pt.i),yP(pt.v));});ctx.stroke();}
-  actualPts.forEach(pt=>{const x=xP(pt.i),y=yP(pt.v);ctx.beginPath();ctx.arc(x,y,pt.i===SCURVE.todayIdx?6:3,0,Math.PI*2);ctx.fillStyle=pt.i===SCURVE.todayIdx?RED:'#fff';ctx.strokeStyle=RED;ctx.lineWidth=2;ctx.fill();ctx.stroke();if(pt.i===SCURVE.todayIdx){const lbl=pt.v.toFixed(2)+'%';ctx.font="700 10px 'JetBrains Mono',monospace";const lw=ctx.measureText(lbl).width+14;ctx.fillStyle=RED;ctx.beginPath();ctx.roundRect(x-lw/2,y-30,lw,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(lbl,x,y-17.5);}});
+  // Helper: draw rounded rectangle (Safari-compatible)
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y);
+    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r);
+    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h);
+    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r);
+    ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath();
+  }
+  
+  actualPts.forEach(pt=>{const x=xP(pt.i),y=yP(pt.v);ctx.beginPath();ctx.arc(x,y,pt.i===SCURVE.todayIdx?6:3,0,Math.PI*2);ctx.fillStyle=pt.i===SCURVE.todayIdx?RED:'#fff';ctx.strokeStyle=RED;ctx.lineWidth=2;ctx.fill();ctx.stroke();if(pt.i===SCURVE.todayIdx){const lbl=pt.v.toFixed(2)+'%';ctx.font="700 10px 'JetBrains Mono',monospace";const lw=ctx.measureText(lbl).width+14;ctx.fillStyle=RED;roundRect(x-lw/2,y-30,lw,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(lbl,x,y-17.5);}});
   const py=yP(SCURVE.planned[SCURVE.todayIdx]);const planLbl=SCURVE.planned[SCURVE.todayIdx].toFixed(2)+'%';
   ctx.font="700 10px 'JetBrains Mono',monospace";const planW=ctx.measureText(planLbl).width+14;
-  ctx.fillStyle=DARK;ctx.beginPath();ctx.roundRect(todayX-planW/2,py+10,planW,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(planLbl,todayX,py+23);
+  ctx.fillStyle=DARK;roundRect(todayX-planW/2,py+10,planW,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(planLbl,todayX,py+23);
   const actualToday=SCURVE.actual[SCURVE.todayIdx],variance=actualToday-SCURVE.planned[SCURVE.todayIdx],midY=(yP(actualToday)+py)/2;
   ctx.font="700 10px 'Sora',sans-serif";ctx.fillStyle=variance>=0?GREEN:RED;ctx.textAlign='left';ctx.fillText((variance>=0?'▲ +':'▼ ')+variance.toFixed(2)+'% '+(variance>=0?'ahead':'behind'),todayX+16,midY+4);
   ctx.font="600 9px 'JetBrains Mono',monospace";ctx.fillStyle=TEAL;ctx.textAlign='right';ctx.fillText('Target: 100%',xP(N-1)-4,yP(100)-6);
@@ -1223,10 +1401,23 @@ function drawSCurve(){
   const badge=document.getElementById('scVarianceBadge');
   if(badge){const v=variance;badge.textContent=(v>=0?'+':'')+v.toFixed(2)+'% '+(v>=0?'Ahead ▲':'Behind ▼');badge.className='badge '+(v>=0?'badge-green':'badge-red');}
 }
-window.addEventListener('load',drawSCurve);
+window.addEventListener('load', function() {
+  // Retry draw until canvas parent has real width (handles mobile layout timing)
+  function tryDraw(attempts) {
+    const canvas = document.getElementById('scurveCanvas');
+    if (!canvas) return;
+    const w = canvas.parentElement.clientWidth;
+    if (w > 10) {
+      drawSCurve();
+    } else if (attempts > 0) {
+      requestAnimationFrame(() => tryDraw(attempts - 1));
+    }
+  }
+  requestAnimationFrame(() => tryDraw(20));
+});
 window.addEventListener('resize',drawSCurve);
 const _origSP=switchPage;
-switchPage=function(name,btn){_origSP(name,btn);if(name==='proj')setTimeout(drawSCurve,60);};
+switchPage=function(name,btn){_origSP(name,btn);if(name==='proj'){requestAnimationFrame(() => requestAnimationFrame(drawSCurve));}};
 
 // ── ACTIVITY DASHBOARD ──
 const MONTH_ORDER=['Apr','May','Jun','Jul','Aug'];
