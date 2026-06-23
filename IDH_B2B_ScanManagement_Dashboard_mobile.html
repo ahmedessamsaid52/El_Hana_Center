@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>IDH B2B — Scan Management PMO Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── DYNAMIC COLOURS ── */
+.owner-Facilities{background:#04785718;color:#047857;border:1px solid #04785755}
+.owner-Finance{background:#0369A118;color:#0369A1;border:1px solid #0369A155}
+.owner-HR{background:#9D174D18;color:#9D174D;border:1px solid #9D174D55}
+.owner-IT{background:#1F4E7818;color:#1F4E78;border:1px solid #1F4E7855}
+.owner-Marketing{background:#6B21A818;color:#6B21A8;border:1px solid #6B21A855}
+.owner-PMO{background:#C8102E18;color:#C8102E;border:1px solid #C8102E55}
+.owner-SC{background:#B4530918;color:#B45309;border:1px solid #B4530955}
+.owner-Sales{background:#0E749018;color:#0E7490;border:1px solid #0E749055}
+.cat-Branding{background:#6B21A818;color:#6B21A8}
+.cat-Commercial{background:#854D0E18;color:#854D0E}
+.cat-Costing{background:#0369A118;color:#0369A1}
+.cat-Infrastructure{background:#1E40AF18;color:#1E40AF}
+.cat-Legal{background:#991B1B18;color:#991B1B}
+.cat-Licensing{background:#9A341218;color:#9A3412}
+.cat-Master_Data{background:#065F4618;color:#065F46}
+.cat-Operations{background:#065F4618;color:#065F46}
+.cat-Procurement{background:#9A341218;color:#9A3412}
+.cat-Recruitment{background:#9D174D18;color:#9D174D}
+.cat-Sales{background:#0E749018;color:#0E7490}
+.cat-Software{background:#0C4A6E18;color:#0C4A6E}
+.cat-System{background:#1F4E7818;color:#1F4E78}
+.del-A{background:#C8102E15;color:#C8102E}
+.del-B{background:#1E40AF15;color:#1E40AF}
+.del-C{background:#065F4615;color:#065F46}
+.del-D{background:#9A341215;color:#9A3412}
+.del-E{background:#4C1D9515;color:#4C1D95}
+.del-F{background:#0C4A6E15;color:#0C4A6E}
+.del-G{background:#6B21A815;color:#6B21A8}
+
+.dept-perf-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;margin-bottom:6px;border:1px solid var(--border);background:var(--card)}
+.dept-perf-row.has-late{background:#FFF5F5;border-color:#FECACA}
+.dept-perf-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:800 12px/1 var(--mono);flex-shrink:0}
+.dept-perf-name{font:700 11px/1 var(--font);color:var(--charcoal);width:100px;flex-shrink:0}
+.dept-perf-bar-track{flex:1;height:8px;background:#EEE;border-radius:4px;overflow:hidden;display:flex}
+.dept-perf-seg-done{height:100%;background:var(--green)}
+.dept-perf-seg-prog{height:100%;background:var(--amber)}
+.dept-perf-seg-pend{height:100%;background:#CBD5E1}
+.dept-perf-stat{font:600 10px/1 var(--mono);width:30px;text-align:right;flex-shrink:0}
+.dept-perf-late-badge{font:800 9px/1 var(--mono);padding:3px 8px;border-radius:10px;flex-shrink:0;white-space:nowrap}
+.stand-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:16px;margin-bottom:20px}
+
+
+
+/* ══════════════════════════════════════════════════════
+   MASTER NAVIGATION — IDH branded style
+══════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:'Sora',sans-serif;background:#F5F2EB;color:#14151A;-webkit-font-smoothing:antialiased}
+
+.master-nav{
+  background:#14151A;
+  border-bottom:3px solid #C8102E;
+  height:52px;
+  display:flex;align-items:center;
+  padding:0 28px;
+  position:sticky;top:0;z-index:1000;
+  gap:0;
+  background-image:
+    radial-gradient(ellipse at top right, rgba(255,255,255,0.07), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='92' viewBox='0 0 80 92'><g fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='1'><polygon points='40,2 76,22 76,68 40,90 4,68 4,22'/></g></svg>");
+}
+.master-nav-logo{display:flex;align-items:center;gap:0;margin-right:24px}
+.master-nav-idh{
+  background:#FFFFFF;border-radius:6px;
+  width:44px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  font:800 16px/1 'Sora',sans-serif;color:#C8102E;
+  letter-spacing:-0.5px;flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,0.18);
+}
+.master-nav-vdivider{width:1px;height:30px;background:rgba(255,255,255,0.2);margin:0 14px}
+.master-nav-dept{display:flex;flex-direction:column;gap:2px}
+.master-nav-dept-name{font:600 11px/1 'Sora',sans-serif;color:#fff;letter-spacing:0.5px;text-transform:uppercase}
+.master-nav-dept-parent{font:400 9px/1 'JetBrains Mono',monospace;color:rgba(255,255,255,0.4);letter-spacing:1.2px;text-transform:uppercase}
+.master-nav-pages{display:flex;gap:4px;margin-left:4px}
+.master-nav-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 16px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.1);
+  background:transparent;
+  color:rgba(255,255,255,.5);
+  font:600 11px/1 'Sora',sans-serif;
+  cursor:pointer;transition:all .18s;white-space:nowrap;
+}
+.master-nav-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.22)}
+.master-nav-btn.active{background:#C8102E;color:#fff;border-color:#C8102E;box-shadow:0 2px 12px rgba(200,16,46,.4)}
+.master-nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.master-nav-badge{font:600 10px/1 'JetBrains Mono',monospace;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase}
+.master-nav-live{
+  display:flex;align-items:center;gap:6px;
+  font:600 10px/1 'JetBrains Mono',monospace;color:#fff;
+  padding:5px 12px;border:1px solid rgba(16,185,129,0.25);border-radius:20px;
+}
+.master-nav-live::before{content:'';width:8px;height:8px;border-radius:50%;background:#10B981;animation:masterBlink 2s infinite}
+
+/* ── PAGE CONTAINERS ── */
+.page{display:none}
+.page.active{display:block}
+
+@keyframes masterBlink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── Prevent any inner topbar from sticking independently ── */
+.page [data-page="proj"] .topbar,
+[data-page="proj"] .topbar {
+  position: relative !important;
+  display: none !important;
+}
+/* ── Activity page: hide any residual topbar elements ── */
+#page-act .topbar,
+#page-act .topbar-logo,
+#page-act .topbar-title,
+#page-act .topbar-badge,
+#page-act .topbar-week,
+#page-act .topbar-right,
+#page-act .topbar-divider {
+  display: none !important;
+}
+/* ── Ensure page containers fill correctly ── */
+.page { width: 100%; }
+
+
+
+/* ══════════════════════════════════════════════════════
+   PAGE 1 — PROJECT DASHBOARD (IDH branded)
+   All rules scoped under [data-page="proj"]
+══════════════════════════════════════════════════════ */
+:root{
+  /* IDH Brand Colours */
+  --red:#C8102E;
+  --red-light:rgba(200,16,46,0.08);
+  --red-mid:rgba(200,16,46,0.15);
+  --charcoal:#14151A;
+  --ink:#2A2C33;
+  --muted:#6B6F78;
+  --line:#E3E1DC;
+  --cream:#FAF7F0;
+  --white:#FFFFFF;
+  /* Status */
+  --green:#2E7D32;
+  --green-bg:#E8F5E9;
+  --green-border:#A5D6A7;
+  --amber:#B45309;
+  --amber-bg:#FEF3C7;
+  --amber-border:#FCD34D;
+  --grey:#64748B;
+  --grey-bg:#F1F5F9;
+  /* Layout */
+  --page:#F5F2EB;
+  --card:#FFFFFF;
+  --border:#E3E1DC;
+  --shadow:0 1px 3px rgba(20,21,26,.05),0 4px 16px rgba(20,21,26,.06);
+  --shadow-lg:0 4px 12px rgba(20,21,26,.08),0 12px 40px rgba(20,21,26,.1);
+  --font:'Sora',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  /* Navy kept for S-curve chart data */
+  --navy:#1F4E78;
+  --blue:#2E75B6;
+  --teal:#285350;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--page);color:var(--charcoal);min-height:100vh;-webkit-font-smoothing:antialiased}
+[data-page="proj"] .wrap{max-width:1400px;margin:0 auto;padding:0 0 56px}
+/* ── TOP NAV BAR ── */
+.topbar{
+  background:var(--charcoal);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+  height:52px;
+  position:sticky;top:0;z-index:100;
+  border-bottom:3px solid var(--red);
+background-image:
+    radial-gradient(ellipse at top right, rgba(255,255,255,0.07), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='92' viewBox='0 0 80 92'><g fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='1'><polygon points='40,2 76,22 76,68 40,90 4,68 4,22'/></g></svg>");
+}
+[data-page="proj"] .topbar-logo{display:flex;align-items:center;gap:0}
+[data-page="proj"] .topbar-idh-box{
+  background:#FFFFFF;
+  border-radius:6px;
+  width:44px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  font:800 16px/1 var(--font);
+  color:var(--red);
+  letter-spacing:-0.5px;
+  flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,0.18);
+}
+[data-page="proj"] .topbar-divider{width:1px;height:30px;background:rgba(255,255,255,0.2);margin:0 14px}
+[data-page="proj"] .topbar-dept{display:flex;flex-direction:column;gap:2px}
+[data-page="proj"] .topbar-dept-name{font:600 11px/1 var(--font);color:#fff;letter-spacing:0.5px;text-transform:uppercase}
+[data-page="proj"] .topbar-dept-parent{font:400 9px/1 var(--mono);color:rgba(255,255,255,0.4);letter-spacing:1.2px;text-transform:uppercase}
+[data-page="proj"] .topbar-right{display:flex;align-items:center;gap:16px}
+[data-page="proj"] .topbar-badge{font:600 10px/1 var(--mono);color:rgba(255,255,255,0.5);letter-spacing:0.08em;text-transform:uppercase}
+[data-page="proj"] .topbar-live{display:flex;align-items:center;gap:6px;font:600 10px/1 var(--mono);color:#FFFFFF;padding:5px 12px;border:1px solid rgba(16,185,129,0.25);border-radius:20px}
+[data-page="proj"] .topbar-live::before{content:'';width:10px;height:10px;border-radius:50%;background:#10B981;animation:blink 2s infinite}
+/* ── HEADER ── */
+.header{
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:20px 28px 18px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:20px;
+  animation:fadeDown .4s ease both;
+}
+[data-page="proj"] .header-eyebrow{font:600 10px/1 var(--mono);color:var(--grey);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+[data-page="proj"] .header-eyebrow::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px var(--red-mid)}
+[data-page="proj"] h1{font-size:clamp(18px,1.8vw,26px);font-weight:800;color:var(--red);line-height:1.2}
+[data-page="proj"] h1 em{font-style:normal;color:var(--charcoal)}
+[data-page="proj"] .sub{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+[data-page="proj"] .header-right{text-align:right;flex-shrink:0}
+[data-page="proj"] .rdate{font:500 11px/1 var(--mono);color:var(--muted)}
+[data-page="proj"] .status-pill{display:inline-flex;align-items:center;gap:5px;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);font:600 11px/1 var(--mono);padding:5px 12px;border-radius:20px;margin-top:7px}
+[data-page="proj"] .status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:#10B981;animation:blink 2s infinite}
+/* ── CONTENT PADDING ── */
+.content{padding:20px 28px 0}
+/* ── TIMELINE ── */
+.timeline-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:16px;box-shadow:var(--shadow);animation:fadeUp .4s .05s ease both;position:relative;overflow:hidden}
+[data-page="proj"] .timeline-wrap::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--red)}
+[data-page="proj"] .tl-label{font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between}
+[data-page="proj"] .tl-label span{color:var(--red);font-weight:700}
+[data-page="proj"] .tl-bar{display:grid;grid-template-columns:repeat(17,1fr);gap:3px}
+[data-page="proj"] .tl-w{height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font:600 10px/1 var(--mono);transition:transform .15s;cursor:default}
+[data-page="proj"] .tl-w:hover{transform:scaleY(1.12)}
+[data-page="proj"] .tl-w.past{background:var(--charcoal);color:#fff}
+[data-page="proj"] .tl-w.now{background:linear-gradient(135deg,var(--red),#E02040);color:#fff;box-shadow:0 3px 12px rgba(200,16,46,.35);position:relative}
+[data-page="proj"] .tl-w.now::after{content:'▼';position:absolute;bottom:-13px;font-size:8px;color:var(--red)}
+[data-page="proj"] .tl-w.future{background:var(--cream);color:var(--muted);border:1px solid var(--border)}
+[data-page="proj"] .tl-meta{display:flex;justify-content:space-between;margin-top:16px;font-size:10.5px;color:var(--muted);font-family:var(--mono)}
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px;animation:fadeUp .4s .1s ease both}
+@media(max-width:1050px){[data-page="proj"] .kpi-row{grid-template-columns:repeat(3,1fr)}}
+[data-page="proj"] .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 15px 13px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s}
+[data-page="proj"] .kpi:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+[data-page="proj"] .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0}
+[data-page="proj"] .kpi.k1::after, [data-page="proj"] .kpi.k1 .kpi-val{background-color:var(--charcoal);color:var(--charcoal)}
+[data-page="proj"] .kpi.k1::after{background:var(--charcoal);color:unset}
+[data-page="proj"] .kpi.k2::after{background:var(--green)}
+[data-page="proj"] .kpi.k2 .kpi-val{color:var(--green)}
+[data-page="proj"] .kpi.k3::after{background:var(--amber)}
+[data-page="proj"] .kpi.k3 .kpi-val{color:var(--amber)}
+[data-page="proj"] .kpi.k4::after{background:var(--muted)}
+[data-page="proj"] .kpi.k4 .kpi-val{color:var(--muted)}
+[data-page="proj"] .kpi.k5::after{background:var(--red)}
+[data-page="proj"] .kpi.k5 .kpi-val{color:var(--charcoal)}
+[data-page="proj"] .kpi.k6::after{background:var(--teal)}
+[data-page="proj"] .kpi.k6 .kpi-val{color:var(--teal)}
+/* fix k1 val color */
+.kpi.k1 .kpi-val{color:var(--charcoal) !important;background-color:transparent !important}
+[data-page="proj"] .kpi-ico{font-size:15px;margin-bottom:6px}
+[data-page="proj"] .kpi-val{font-weight:800;font-size:26px;line-height:1;margin-bottom:3px}
+[data-page="proj"] .kpi-lbl{font-size:10.5px;font-weight:600;color:var(--muted)}
+[data-page="proj"] .kpi-sub{font-size:9.5px;color:var(--muted);margin-top:4px}
+.kpi-variance{font-size:9px;margin-top:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:center}
+.kpi-variance .vs{color:var(--muted);font:400 9px/1 var(--mono)}
+.kpi-variance .badge-ahead{color:#2E7D32;background:#E8F5E9;font:700 9px/1 var(--mono);padding:2px 6px;border-radius:10px}
+.kpi-variance .badge-behind{color:#C8102E;background:#FEE2E2;font:700 9px/1 var(--mono);padding:2px 6px;border-radius:10px}
+[data-page="proj"] .kpi-tag{position:absolute;bottom:10px;right:11px;font:700 9px/1 var(--mono)}
+[data-page="proj"] .tag-ahead{color:var(--green)}
+/* ── MAIN GRID ── */
+.main{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:14px;animation:fadeUp .4s .15s ease both}
+@media(max-width:1050px){[data-page="proj"] .main{grid-template-columns:1fr}}
+[data-page="proj"] .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+[data-page="proj"] .ph{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--cream)}
+[data-page="proj"] .ph-title{font-size:12px;font-weight:700;color:var(--charcoal);display:flex;align-items:center;gap:7px}
+[data-page="proj"] .ph-title::before{content:'';display:block;width:3px;height:14px;background:var(--red);border-radius:2px;flex-shrink:0}
+[data-page="proj"] .ph-title small{font-weight:400;color:var(--muted);font-size:10.5px;margin-left:4px}
+[data-page="proj"] .badge{font:600 10px/1 var(--mono);padding:3px 9px;border-radius:20px;background:#EFF6FF;color:var(--blue);border:1px solid #BFDBFE;white-space:nowrap}
+[data-page="proj"] .badge-green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+[data-page="proj"] .badge-red{background:rgba(200,16,46,0.08);color:var(--red);border-color:rgba(200,16,46,0.25)}
+[data-page="proj"] .dtbl{width:100%;border-collapse:collapse}
+[data-page="proj"] .dtbl th{font:600 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 10px;text-align:center;background:var(--cream);border-bottom:1px solid var(--border)}
+[data-page="proj"] .dtbl th:nth-child(1), [data-page="proj"] .dtbl th:nth-child(2){text-align:left}
+[data-page="proj"] .dtbl td{padding:9px 10px;font-size:11px;border-bottom:1px solid var(--border);vertical-align:middle}
+[data-page="proj"] .dtbl tr:last-child td{border-bottom:none}
+[data-page="proj"] .dtbl tbody tr{transition:background .12s}
+[data-page="proj"] .dtbl tbody tr:hover{background:var(--cream)}
+[data-page="proj"] .dn{width:22px;height:22px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font:700 10px/1 var(--mono);color:#fff}
+[data-page="proj"] .dname{font-weight:600;color:var(--charcoal);font-size:11px}
+[data-page="proj"] .cnt-done{color:var(--green);font-weight:700;text-align:center}
+[data-page="proj"] .cnt-prog{color:var(--amber);font-weight:700;text-align:center}
+[data-page="proj"] .cnt-pend{color:var(--muted);text-align:center}
+[data-page="proj"] .ev-tag{font:500 10px/1 var(--mono);padding:2px 6px;border-radius:4px;display:inline-block}
+[data-page="proj"] .ev-on{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+[data-page="proj"] .ev-off{background:var(--grey-bg);color:var(--muted);border:1px solid var(--border)}
+[data-page="proj"] .prog-row{display:flex;align-items:center;gap:7px;min-width:110px}
+[data-page="proj"] .prog-bg{flex:1;height:5px;background:var(--cream);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+[data-page="proj"] .prog-bar{height:100%;border-radius:3px}
+[data-page="proj"] .prog-pct{font:500 10px/1 var(--mono);color:var(--muted);min-width:28px;text-align:right}
+[data-page="proj"] .tot td{background:var(--charcoal)!important;color:#fff!important;font-weight:700}
+[data-page="proj"] .tot .dname{color:#fff!important}
+[data-page="proj"] .tot .cnt-done, [data-page="proj"] .tot .cnt-prog, [data-page="proj"] .tot .cnt-pend{color:#fff!important}
+[data-page="proj"] .rc{display:flex;flex-direction:column;gap:12px}
+[data-page="proj"] .donut-body{padding:16px;display:flex;flex-direction:column;align-items:center}
+[data-page="proj"] .donut-container{position:relative;width:128px;height:128px}
+[data-page="proj"] .donut-svg{width:128px;height:128px}
+[data-page="proj"] .donut-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+[data-page="proj"] .donut-big{font-weight:800;font-size:22px;color:var(--charcoal);line-height:1}
+[data-page="proj"] .donut-tiny{font-size:9.5px;color:var(--muted);margin-top:2px}
+[data-page="proj"] .d-legend{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;margin-top:12px}
+[data-page="proj"] .d-leg{text-align:center}
+[data-page="proj"] .d-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px;vertical-align:middle}
+[data-page="proj"] .d-val{font-weight:800;font-size:16px}
+[data-page="proj"] .d-v1{color:var(--green)}
+[data-page="proj"] .d-v2{color:var(--amber)}
+[data-page="proj"] .d-v3{color:var(--muted)}
+[data-page="proj"] .d-lbl{font-size:9px;color:var(--muted);display:block;margin-top:1px}
+[data-page="proj"] .cat-body{padding:8px 16px 14px}
+[data-page="proj"] .cat-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border);font-size:11px}
+[data-page="proj"] .cat-row:last-child{border-bottom:none}
+[data-page="proj"] .cat-nm{width:66px;font-weight:600;color:var(--charcoal);flex-shrink:0}
+[data-page="proj"] .cat-track{flex:1;height:4px;background:var(--cream);border-radius:2px;overflow:hidden}
+[data-page="proj"] .cat-fill{height:100%;border-radius:2px}
+[data-page="proj"] .cat-n{font:500 10px/1 var(--mono);color:var(--muted);width:20px;text-align:right}
+[data-page="proj"] .bottom{display:grid;grid-template-columns:1fr 2fr;gap:14px;animation:fadeUp .4s .2s ease both}
+@media(max-width:900px){[data-page="proj"] .bottom{grid-template-columns:1fr}}
+[data-page="proj"] .ev-body{padding:14px 18px 18px}
+[data-page="proj"] .ev-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+[data-page="proj"] .ev-row:last-child{margin-bottom:0}
+[data-page="proj"] .ev-nm{font-size:10.5px;font-weight:500;color:var(--muted);width:108px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[data-page="proj"] .ev-track{flex:1;height:7px;background:var(--cream);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+[data-page="proj"] .ev-fill{height:100%;border-radius:4px}
+[data-page="proj"] .ev-pct{font:600 10px/1 var(--mono);width:44px;text-align:right;flex-shrink:0}
+[data-page="proj"] .sc-stats{display:flex;gap:0;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+[data-page="proj"] .sc-stat{flex:1;text-align:center;padding:0 8px}
+[data-page="proj"] .sc-stat:not(:last-child){border-right:1px solid var(--border)}
+[data-page="proj"] .sc-stat-lbl{font:600 10px/1 var(--mono);color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+[data-page="proj"] .sc-stat-val{font-weight:800;font-size:18px}
+/* ── FOOTER ── */
+.footer-bar{
+  background:var(--charcoal);
+  border-top:3px solid var(--red);
+  margin-top:28px;
+  padding:14px 28px;
+  display:flex;justify-content:space-between;align-items:center;
+  font:400 9.5px/1 var(--mono);color:rgba(255,255,255,0.4);
+  animation:fadeUp .4s .25s ease both;
+  gap:16px;flex-wrap:wrap;
+}
+[data-page="proj"] .footer-logo-mini{display:flex;align-items:center;gap:8px}
+[data-page="proj"] .footer-idh-box{background:var(--red);padding:3px 7px;font:800 11px/1 var(--font);color:#fff;border-radius:2px}
+[data-page="proj"] .footer-dept{font:500 9px/1 var(--mono);color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px}
+[data-page="proj"] .footer-tagline{font:400 9px/1 var(--mono);color:rgba(200,16,46,0.6);letter-spacing:0.5px;font-style:italic}
+/* ── TOOLTIP ── */
+.tooltip{position:relative;cursor:default}
+[data-page="proj"] .tooltip::after{content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--charcoal);color:#fff;font-size:10px;font-family:var(--mono);padding:4px 8px;border-radius:4px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s;z-index:20}
+[data-page="proj"] .tooltip:hover::after{opacity:1}
+/* ── ANIMATIONS ── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes grow{from{width:0!important}}
+[data-page="proj"] .prog-bar, [data-page="proj"] .ev-fill, [data-page="proj"] .cat-fill{animation:grow .9s cubic-bezier(.4,0,.2,1) both}
+[data-page="proj"] .dtbl tbody tr:nth-child(1){animation:fadeUp .35s .04s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(2){animation:fadeUp .35s .08s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(3){animation:fadeUp .35s .12s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(4){animation:fadeUp .35s .16s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(5){animation:fadeUp .35s .20s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(6){animation:fadeUp .35s .24s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(7){animation:fadeUp .35s .28s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(8){animation:fadeUp .35s .32s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(9){animation:fadeUp .35s .36s both}
+[data-page="proj"] .dtbl tbody tr:nth-child(10){animation:fadeUp .35s .40s both}
+
+
+
+/* ══════════════════════════════════════════════════════
+   PAGE 2 — ACTIVITY DASHBOARD
+══════════════════════════════════════════════════════ */
+
+:root {
+  --red:#C8102E; --red-dim:rgba(200,16,46,0.12);
+  --charcoal:#14151A; --ink:#1E2029; --card:#FFFFFF;
+  --page:#F5F2EB; --border:#E3E1DC; --muted:#6B7280;
+  --green:#2E7D32; --green-bg:#E8F5E9; --green-border:#A5D6A7;
+  --amber:#B45309; --amber-bg:#FEF3C7; --amber-border:#FCD34D;
+  --grey:#64748B; --grey-bg:#F1F5F9;
+  --rt:#1F4E78; --rt-bg:#EFF6FF; --rt-border:#BFDBFE;
+  --idh:#7C3AED; --idh-bg:#F5F3FF; --idh-border:#DDD6FE;
+  --apr:#0E7490; --may:#0369A1; --jun:#1D4ED8; --jul:#4338CA;
+  --font:'Sora',sans-serif; --mono:'JetBrains Mono',monospace;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.07);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--page);color:var(--charcoal);-webkit-font-smoothing:antialiased}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--charcoal);border-bottom:3px solid var(--red);padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.topbar-logo{display:flex;align-items:center;gap:12px}
+.topbar-idh{background:#fff;color:var(--red);font:800 14px/1 var(--font);padding:4px 9px;border-radius:5px;letter-spacing:-.3px}
+.topbar-divider{width:1px;height:24px;background:rgba(255,255,255,.2)}
+.topbar-title{color:#fff;font:500 12px/1 var(--font);opacity:.85}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-badge{background:var(--red);color:#fff;font:600 10px/1 var(--mono);padding:4px 10px;border-radius:20px}
+.topbar-week{color:rgba(255,255,255,.5);font:400 10px/1 var(--mono)}
+
+/* ── WRAP ── */
+.wrap{max-width:1440px;margin:0 auto;padding:24px 28px 64px}
+
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab{padding:10px 20px;font:600 12px/1 var(--font);color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;border-radius:6px 6px 0 0;white-space:nowrap}
+.tab:hover{color:var(--charcoal);background:rgba(0,0,0,.03)}
+.tab.active{color:var(--red);border-bottom-color:var(--red);background:#fff}
+
+/* ── SECTION ── */
+.section{display:none}.section.active{display:block}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:22px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 14px 11px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.k-total::before{background:var(--charcoal)}.kpi.k-done::before{background:var(--green)}.kpi.k-prog::before{background:var(--amber)}.kpi.k-pend::before{background:var(--grey)}.kpi.k-rt::before{background:var(--rt)}.kpi.k-idh::before{background:var(--idh)}.kpi.k-block::before{background:var(--red)}
+.kpi-val{font:800 26px/1 var(--font);margin-bottom:3px}
+.kpi.k-total .kpi-val{color:var(--charcoal)}.kpi.k-done .kpi-val{color:var(--green)}.kpi.k-prog .kpi-val{color:var(--amber)}.kpi.k-pend .kpi-val{color:var(--grey)}.kpi.k-rt .kpi-val{color:var(--rt)}.kpi.k-idh .kpi-val{color:var(--idh)}.kpi.k-block .kpi-val{color:var(--red)}
+.kpi-lbl{font:600 10px/1 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+/* ── MONTH SECTIONS ── */
+.month-grid{display:flex;flex-direction:column;gap:20px}
+.month-block{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.month-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.month-hdr-left{display:flex;align-items:center;gap:12px}
+.month-dot{width:10px;height:10px;border-radius:50%}
+.month-name{font:700 15px/1 var(--font)}
+.month-pills{display:flex;gap:6px}
+.mpill{font:600 10px/1 var(--mono);padding:3px 8px;border-radius:12px}
+.mpill-done{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.mpill-prog{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.mpill-pend{background:var(--grey-bg);color:var(--grey);border:1px solid #CBD5E1}
+.mpill-rt{background:var(--rt-bg);color:var(--rt);border:1px solid var(--rt-border)}
+.mpill-idh{background:var(--idh-bg);color:var(--idh);border:1px solid var(--idh-border)}
+.month-chevron{font-size:12px;color:var(--muted);transition:transform .2s}
+.month-chevron.open{transform:rotate(180deg)}
+.month-body{padding:0 20px 16px;overflow:hidden;transition:max-height .3s ease}
+
+/* ── ACTIVITY TABLE ── */
+.act-table{width:100%;border-collapse:collapse;margin-top:12px}
+.act-table th{font:600 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:7px 10px;text-align:left;background:#FAFAF9;border-bottom:1px solid var(--border);white-space:nowrap}
+.act-table th.center{text-align:center}
+.act-table td{padding:8px 10px;font:400 11px/1.4 var(--font);border-bottom:1px solid #F3F0EA;vertical-align:middle}
+.act-table tr:last-child td{border-bottom:none}
+.act-table tr:hover td{background:#FAFAF9}
+.code-badge{font:700 10px/1 var(--mono);padding:2px 7px;border-radius:4px;background:#F1F5F9;color:var(--charcoal);white-space:nowrap}
+.del-tag{font:500 10px/1 var(--mono);padding:2px 6px;border-radius:3px;white-space:nowrap}
+.cat-tag{font:500 9px/1 var(--mono);padding:2px 6px;border-radius:3px}
+.desc-text{font:400 11px/1.4 var(--font);color:var(--charcoal);max-width:320px}
+.status-ic{font-size:13px;display:inline-block;width:20px;text-align:center}
+.owner-tag{font:700 10px/1 var(--mono);padding:2px 8px;border-radius:10px;white-space:nowrap}
+.owner-rt{background:var(--rt-bg);color:var(--rt);border:1px solid var(--rt-border)}
+.owner-idh{background:var(--idh-bg);color:var(--idh);border:1px solid var(--idh-border)}
+.dep-code{font:600 10px/1 var(--mono);color:var(--muted);padding:2px 6px;background:#F5F2EB;border-radius:3px;white-space:nowrap}
+.dep-none{color:#C4BAA8;font-style:italic;font-size:10px}
+.pct-bar{display:flex;align-items:center;gap:6px}
+.pct-track{width:60px;height:5px;background:#EEE;border-radius:3px;overflow:hidden}
+.pct-fill{height:100%;border-radius:3px}
+.pct-val{font:600 10px/1 var(--mono);color:var(--muted);min-width:26px}
+.blocker-row td{background:#FFF5F5!important}
+.blocker-row .desc-text{color:#991B1B}
+
+/* ── CATEGORY COLORS ── */
+.cat-Design{background:#FEF9C3;color:#854D0E}
+.cat-Backend{background:#DBEAFE;color:#1E40AF}
+.cat-Frontend{background:#D1FAE5;color:#065F46}
+.cat-Testing{background:#FCE7F3;color:#9D174D}
+.cat-QA{background:#EDE9FE;color:#4C1D95}
+.cat-Security{background:#FEE2E2;color:#991B1B}
+
+/* ── DELIVERABLE COLORS ── */
+.del-A{background:#FEF2F2;color:#C8102E}.del-B{background:#F0FDF4;color:#166534}
+.del-C{background:#EFF6FF;color:#1E40AF}.del-D{background:#FFF7ED;color:#9A3412}
+.del-E{background:#F5F3FF;color:#4C1D95}.del-F{background:#ECFDF5;color:#065F46}
+.del-G{background:#F0F9FF;color:#0C4A6E}.del-H{background:#FDF4FF;color:#6B21A8}
+.del-I{background:#F8FAFC;color:#334155}
+
+/* ── DEPENDENCY MAP ── */
+.dep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px}
+@media(max-width:1100px){.dep-grid{grid-template-columns:repeat(2,1fr)}}
+.dep-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.dep-card-hdr{padding:10px 14px;font:700 11px/1 var(--font);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.dep-card-body{padding:8px 14px 12px;display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto}
+.dep-row{display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:1px solid #F3F0EA;font-size:11px}
+.dep-row:last-child{border-bottom:none}
+.dep-from{font:700 10px/1 var(--mono);padding:2px 5px;border-radius:3px;background:#F1F5F9;color:var(--charcoal);flex-shrink:0;margin-top:1px}
+.dep-arrow{color:#CBD5E1;flex-shrink:0;margin-top:1px;font-size:10px}
+.dep-to-list{display:flex;flex-wrap:wrap;gap:3px}
+.dep-to{font:600 10px/1 var(--mono);padding:1px 5px;border-radius:3px;background:var(--red-dim);color:var(--red)}
+.dep-desc{color:var(--muted);font-size:10px;line-height:1.3;margin-top:1px;flex:1}
+
+/* ── RESPONSIBILITY VIEW ── */
+.resp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.resp-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.resp-hdr{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.resp-hdr-left{display:flex;align-items:center;gap:10px}
+.resp-hdr-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:800 13px/1 var(--font)}
+.resp-hdr-rt .resp-hdr-icon{background:var(--rt-bg);color:var(--rt)}
+.resp-hdr-idh .resp-hdr-icon{background:var(--idh-bg);color:var(--idh)}
+.resp-hdr-name{font:700 14px/1 var(--font)}
+.resp-hdr-sub{font:400 11px/1 var(--mono);color:var(--muted);margin-top:2px}
+.resp-stats{display:flex;gap:12px}
+.resp-stat{text-align:center}
+.resp-stat-val{font:800 18px/1 var(--font)}
+.resp-stat-lbl{font:500 9px/1 var(--mono);color:var(--muted);text-transform:uppercase;margin-top:2px}
+.resp-body{padding:14px 20px}
+.resp-del-row{margin-bottom:12px}
+.resp-del-name{font:600 11px/1 var(--font);color:var(--charcoal);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.resp-acts{display:flex;flex-direction:column;gap:3px}
+.resp-act{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;font-size:11px}
+.resp-act-done{background:var(--green-bg)}
+.resp-act-prog{background:var(--amber-bg)}
+.resp-act-pend{background:var(--grey-bg)}
+.resp-act-blocker{background:#FEF2F2;border:1px solid #FECACA}
+.resp-act-code{font:700 10px/1 var(--mono);width:32px;flex-shrink:0}
+.resp-act-desc{flex:1;color:var(--charcoal);line-height:1.3}
+.resp-act-status{font-size:11px;flex-shrink:0}
+.blocker-label{font:700 9px/1 var(--mono);color:var(--red);background:#FEE2E2;padding:1px 5px;border-radius:3px;flex-shrink:0}
+
+/* ── WHERE WE STAND ── */
+
+.stand-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+.stand-title{font:700 12px/1 var(--font);color:var(--charcoal);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.del-progress-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.del-progress-row:last-child{margin-bottom:0}
+.del-letter-badge{width:22px;height:22px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font:700 10px/1 var(--mono);flex-shrink:0}
+.del-prog-name{font:500 10px/1 var(--font);color:var(--charcoal);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.del-prog-track{width:80px;height:5px;background:#EEE;border-radius:3px;overflow:hidden;flex-shrink:0}
+.del-prog-fill{height:100%;border-radius:3px}
+.del-prog-pct{font:600 10px/1 var(--mono);color:var(--muted);width:28px;text-align:right;flex-shrink:0}
+.risk-item{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.risk-item:last-child{border-bottom:none}
+.risk-icon{font-size:14px;flex-shrink:0}
+.risk-body{flex:1}
+.risk-title{font:600 11px/1.3 var(--font);color:var(--charcoal);margin-bottom:2px}
+.risk-sub{font:400 10px/1.3 var(--font);color:var(--muted)}
+.risk-badge{font:700 9px/1 var(--mono);padding:2px 6px;border-radius:10px;flex-shrink:0;margin-top:1px}
+.rb-high{background:#FEE2E2;color:#991B1B}
+.rb-med{background:#FEF3C7;color:#92400E}
+.rb-low{background:#D1FAE5;color:#065F46}
+.next-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);align-items:center}
+.next-item:last-child{border-bottom:none}
+.next-code{font:700 10px/1 var(--mono);padding:2px 6px;border-radius:4px;background:#F1F5F9;color:var(--charcoal);flex-shrink:0}
+.next-desc{font:400 11px/1.3 var(--font);color:var(--charcoal);flex:1}
+.next-owner{font:600 9px/1 var(--mono);padding:1px 6px;border-radius:8px}
+
+/* ── FOOTER ── */
+.footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font:400 10px/1 var(--mono);color:var(--muted)}
+
+
+/* ── SLICERS ── */
+.slicer-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 20px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:18px;box-shadow:var(--shadow)}
+.slicer-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.slicer-label{font:700 9px/1 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;padding-right:4px;border-right:1px solid var(--border)}
+.slicer-btn{font:600 10px/1 var(--mono);padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+.slicer-btn:hover{border-color:var(--charcoal);color:var(--charcoal)}
+.slicer-btn.active{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+.slicer-btn.s-done.active{background:var(--green);border-color:var(--green)}
+.slicer-btn.s-prog.active{background:var(--amber);border-color:var(--amber)}
+.slicer-btn.s-pend.active{background:var(--grey);border-color:var(--grey)}
+.slicer-btn.s-rt.active{background:var(--rt);border-color:var(--rt)}
+.slicer-btn.s-idh.active{background:var(--idh);border-color:var(--idh)}
+.slicer-btn.s-block.active{background:var(--red);border-color:var(--red)}
+.slicer-sep{width:1px;height:20px;background:var(--border)}
+.slicer-results{font:500 10px/1 var(--mono);color:var(--muted);margin-left:auto;white-space:nowrap}
+.slicer-reset{font:600 10px/1 var(--mono);padding:5px 11px;border-radius:20px;border:1px solid #FECACA;background:#FFF5F5;color:var(--red);cursor:pointer;transition:all .15s}
+.slicer-reset:hover{background:#FEE2E2}
+/* row visibility */
+.act-row-hidden{display:none!important}
+/* month block visibility */
+.month-block-hidden{display:none!important}
+/* empty month message */
+.month-empty{padding:10px 0;font:400 11px/1 var(--font);color:var(--muted);font-style:italic;text-align:center}
+
+/* ── DELAYED WIDGET ── */
+.delayed-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.delayed-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:7px;border:1px solid #FECACA;background:#FFF5F5}
+.delayed-item-code{font:800 10px/1 var(--mono);color:var(--red);flex-shrink:0;padding:2px 6px;background:#FEE2E2;border-radius:4px;margin-top:1px}
+.delayed-item-body{flex:1;min-width:0}
+.delayed-item-desc{font:400 10px/1.3 var(--font);color:#991B1B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.delayed-item-meta{font:500 9px/1 var(--mono);color:var(--muted);margin-top:3px;display:flex;gap:6px;flex-wrap:wrap}
+.delayed-item-owner{font:700 9px/1 var(--mono);padding:1px 5px;border-radius:8px}
+.delayed-count{font:800 28px/1 var(--font);color:var(--red);margin-bottom:2px}
+.delayed-sub{font:500 10px/1 var(--mono);color:var(--muted)}
+.stand-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:16px;margin-bottom:20px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wrap>*{animation:fadeUp .35s ease both}
+
+
+</style>
+<style>
+/* ════════════════════════════════════════════
+   MOBILE / IOS RESPONSIVE OVERRIDES
+   Injected for iPhone & iPad compatibility
+════════════════════════════════════════════ */
+
+/* Fix iOS tap highlight & font scaling */
+* { -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* ── VIEWPORT CLAMP: prevent horizontal scroll ── */
+body { overflow-x: hidden; }
+.wrap, [data-page="proj"] .wrap { overflow-x: hidden; }
+
+/* ── MASTER NAV: stack logo + pills on mobile ── */
+@media (max-width: 768px) {
+  .master-nav {
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 14px 8px;
+    gap: 8px;
+  }
+  .master-nav-logo { margin-right: 0; }
+  .master-nav-dept-name { font-size: 10px; }
+  .master-nav-dept-parent { display: none; }
+  .master-nav-vdivider { display: none; }
+  .master-nav-pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-left: 0;
+    width: 100%;
+  }
+  .master-nav-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+    flex: 1 1 auto;
+    text-align: center;
+    justify-content: center;
+    min-height: 36px;
+    -webkit-appearance: none;
+  }
+  .master-nav-right {
+    margin-left: 0;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .master-nav-badge { font-size: 9px; }
+  .master-nav-live { font-size: 9px; }
+}
+
+/* ── HEADER: stack layout ── */
+@media (max-width: 768px) {
+  [data-page="proj"] .header,
+  .header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px;
+    padding: 16px 14px 12px !important;
+  }
+  [data-page="proj"] .header h1,
+  .header h1 { font-size: 18px !important; }
+  [data-page="proj"] .header .sub,
+  .header .sub { font-size: 10px !important; line-height: 1.5 !important; }
+  [data-page="proj"] .header-right,
+  .header-right { text-align: left !important; }
+  [data-page="proj"] .rdate,
+  .rdate { font-size: 10px; }
+
+  /* content padding */
+  [data-page="proj"] .content,
+  .content { padding: 14px 14px 40px !important; }
+  [data-page="proj"] .wrap,
+  .wrap { padding: 0 0 40px !important; }
+}
+
+/* ── KPI ROW: 2-col on mobile ── */
+@media (max-width: 768px) {
+  .kpi-row,
+  [data-page="proj"] .kpi-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  [data-page="proj"] .kpi { padding: 12px 10px 10px !important; }
+  [data-page="proj"] .kpi-val { font-size: 22px !important; }
+  [data-page="proj"] .kpi-lbl { font-size: 9px !important; }
+  [data-page="proj"] .kpi-sub { font-size: 8px !important; }
+  [data-page="proj"] .kpi-ico { font-size: 14px !important; }
+  [data-page="proj"] .kpi-variance { display: none; }
+}
+
+/* ── TIMELINE: scrollable on mobile ── */
+@media (max-width: 768px) {
+  .timeline-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  [data-page="proj"] .tl-bar { min-width: 600px; }
+  [data-page="proj"] .tl-meta { min-width: 600px; font-size: 9px !important; }
+}
+
+/* ── MAIN GRID: single column ── */
+@media (max-width: 768px) {
+  [data-page="proj"] .main,
+  .main { grid-template-columns: 1fr !important; gap: 10px !important; }
+  [data-page="proj"] .bottom,
+  .bottom { grid-template-columns: 1fr !important; gap: 10px !important; }
+}
+
+/* ── DATA TABLES: scrollable ── */
+@media (max-width: 768px) {
+  .panel { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  [data-page="proj"] .dtbl { min-width: 600px; }
+  .act-table { min-width: 700px; }
+  .panel > div:first-child { /* panel header stays visible */ position: sticky; left: 0; z-index: 2; }
+
+  /* Table wrapper scrollable */
+  [data-page="proj"] .panel > .pb,
+  [data-page="proj"] .panel > div:last-child {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ── STAND GRID: single col ── */
+@media (max-width: 768px) {
+  .stand-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── DEP GRID: single col ── */
+@media (max-width: 768px) {
+  .dep-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── SLICER BAR: wrap & scroll ── */
+@media (max-width: 768px) {
+  .slicer-bar {
+    gap: 8px !important;
+    padding: 10px 12px !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slicer-group { flex-wrap: wrap; }
+  .slicer-results { margin-left: 0 !important; }
+}
+
+/* ── TABS: scrollable row ── */
+@media (max-width: 768px) {
+  .tab-bar, .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap !important;
+    padding-bottom: 4px;
+  }
+  .tab { white-space: nowrap; padding: 8px 14px !important; font-size: 11px !important; min-height: 36px; }
+}
+
+/* ── FOOTER: stack ── */
+@media (max-width: 768px) {
+  .footer { flex-direction: column; gap: 6px; font-size: 9px; }
+}
+
+/* ── DEPT PERF ROWS: handle overflow ── */
+@media (max-width: 768px) {
+  .dept-perf-name { width: 72px !important; font-size: 10px !important; }
+  .dept-perf-row { gap: 6px !important; padding: 7px 8px !important; }
+  .dept-perf-late-badge { font-size: 8px !important; padding: 2px 5px !important; }
+}
+
+/* ── TOPBAR (page-level) ── */
+@media (max-width: 768px) {
+  [data-page="proj"] .topbar {
+    flex-direction: column !important;
+    height: auto !important;
+    padding: 10px 14px !important;
+    gap: 8px;
+  }
+  [data-page="proj"] .topbar-right { gap: 8px; }
+}
+
+/* ── DONUT / RIGHT COLUMN: full width ── */
+@media (max-width: 768px) {
+  [data-page="proj"] .rc { width: 100%; }
+  [data-page="proj"] .donut-container { width: 100px; height: 100px; }
+  [data-page="proj"] .donut-svg { width: 100px; height: 100px; }
+  [data-page="proj"] .d-legend { grid-template-columns: 1fr 1fr !important; }
+}
+
+/* ── IOS BUTTON RESET ── */
+@media (max-width: 768px) {
+  button, .tab, .slicer-btn, .master-nav-btn {
+    -webkit-appearance: none;
+    touch-action: manipulation;
+    cursor: pointer;
+  }
+}
+
+/* ── SAFE AREA (iPhone notch/home bar) ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  .master-nav {
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+  }
+}
+
+/* ── Next steps / event rows ── */
+@media (max-width: 768px) {
+  [data-page="proj"] .ev-nm { width: 80px !important; font-size: 10px !important; }
+  [data-page="proj"] .next-desc { font-size: 10px !important; }
+  [data-page="proj"] .next-code { font-size: 9px !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="master-nav">
+  <div class="master-nav-logo">
+    <div class="master-nav-idh">IDH</div>
+    <div class="master-nav-vdivider"></div>
+    <div class="master-nav-dept">
+      <div class="master-nav-dept-name">Strategic Planning &amp; PMO</div>
+      <div class="master-nav-dept-parent">Integrated Diagnostics Holdings</div>
+    </div>
+  </div>
+  <div class="master-nav-pages">
+    <button class="master-nav-btn active" onclick="switchPage('proj',this)">📊 Project Dashboard</button>
+    <button class="master-nav-btn" onclick="switchPage('act',this)">📋 Activity Dashboard</button>
+  </div>
+  <div class="master-nav-right">
+    <span class="master-nav-badge">B2B · Scan Management · El Hana</span>
+    <span class="master-nav-live">Live Dashboard</span>
+  </div>
+</div>
+
+<!-- ══ PAGE 1: PROJECT DASHBOARD ══ -->
+<div id="page-proj" class="page active" data-page="proj">
+<div class="header">
+  <div class="header-left">
+    <div class="header-info">
+      <div class="header-eyebrow">IDH · B2B · Scan Management</div>
+      <h1>El-Hana Center — Project Dashboard</h1>
+      <div class="sub">Hospital Partnership &middot; Scan Management Module &middot; B2B Licensing &nbsp;|&nbsp; 01 Apr – 31 Aug 2026 &nbsp;|&nbsp; El Shorouk Mall Branch</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="rdate">Report Date: 21-Jun-2026</div>
+    <div class="status-pill">Go-Live Target: 31-Aug-2026 · In Progress</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- Timeline W1–W23 -->
+<div class="timeline-wrap">
+  <div class="tl-label">Project Progress — W1 to W23 (01 Apr – 31 Aug 2026)<span>▼ Now: W13 · 21-Jun-2026</span></div>
+  <div class="tl-bar" id="tlBar"></div>
+  <div class="tl-meta"><span>Start: 01 Apr 2026</span><span>Elapsed: ~82 days of 153 &nbsp;|&nbsp; Remaining: ~71 days &nbsp;|&nbsp; Overall EV: 32.30%</span><span>Target Go-Live: 31 Aug 2026</span></div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-row">
+  <div class="kpi k1"><div class="kpi-ico">📋</div><div class="kpi-val">61</div><div class="kpi-lbl">Total Activities</div><div class="kpi-sub">7 deliverables &middot; B2B Scan Mgmt</div></div>
+  <div class="kpi k2"><div class="kpi-ico">✔</div><div class="kpi-val">10</div><div class="kpi-lbl">Completed</div><div class="kpi-sub">16.4% of total</div></div>
+  <div class="kpi k3"><div class="kpi-ico">▶</div><div class="kpi-val">14</div><div class="kpi-lbl">In Progress</div><div class="kpi-sub">23.0% active now</div></div>
+  <div class="kpi k4"><div class="kpi-ico">⏳</div><div class="kpi-val">37</div><div class="kpi-lbl">Not Started</div><div class="kpi-sub">60.7% pending</div></div>
+  <div class="kpi k5"><div class="kpi-ico">📈</div><div class="kpi-val">32.3%</div><div class="kpi-lbl">Overall EV</div><div class="kpi-variance"><span class="vs">vs 30.87% planned</span><span class="badge-ahead">+1.43% ahead ▲</span></div></div>
+  <div class="kpi k6"><div class="kpi-ico">🗓️</div><div class="kpi-val">71</div><div class="kpi-lbl">Days Remaining</div><div class="kpi-sub">to 31-Aug-2026</div></div>
+</div>
+
+<!-- Main grid -->
+<div class="main">
+  <div class="panel">
+    <div class="ph"><div class="ph-title">Deliverable Progress <small>7 Deliverables</small></div><div class="badge badge-green">EV: 32.30%</div></div>
+    <table class="dtbl"><thead><tr><th colspan="2">Deliverable</th><th>Wt%</th><th>EV%</th><th>✔</th><th>▶</th><th>⏳</th><th>Progress</th></tr></thead><tbody id="dtblBody"></tbody></table>
+  </div>
+  <div class="rc">
+    <div class="panel">
+      <div class="ph"><div class="ph-title">Status Distribution</div></div>
+      <div class="donut-body">
+        <div class="donut-container"><svg class="donut-svg" viewBox="0 0 130 130" id="donutSvg"></svg><div class="donut-mid"><div class="donut-big">61</div><div class="donut-tiny">activities</div></div></div>
+        <div class="d-legend">
+          <div class="d-leg"><span class="d-dot" style="background:var(--green)"></span><div class="d-val d-v1">10</div><span class="d-lbl">Done</span></div>
+          <div class="d-leg"><span class="d-dot" style="background:var(--amber)"></span><div class="d-val d-v2">14</div><span class="d-lbl">Active</span></div>
+          <div class="d-leg"><span class="d-dot" style="background:#BDC3C7"></span><div class="d-val d-v3">37</div><span class="d-lbl">Pending</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel"><div class="ph"><div class="ph-title">By Category</div></div><div class="cat-body" id="catBody"></div></div>
+  </div>
+</div>
+
+<!-- Bottom: Dept Performance + S-Curve -->
+<div class="bottom">
+  <div class="panel">
+    <div class="ph"><div class="ph-title">Department Performance <small>Who's late?</small></div><div class="badge" id="projDeptBadge">—</div></div>
+    <div style="padding:14px 18px" id="projDeptBody"></div>
+  </div>
+  <div class="panel">
+    <div class="ph">
+      <div class="ph-title">S-Curve — Planned vs Actual <small>Actual verified via weekly Sunday email</small></div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--charcoal)"><span style="display:inline-block;width:20px;height:3px;background:var(--charcoal);border-radius:2px"></span>Planned</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--red)"><span style="display:inline-block;width:20px;height:3px;background:var(--red);border-radius:2px"></span>Actual</span>
+        <div class="badge badge-green" id="scVarianceBadge">+1.43% Ahead ▲</div>
+      </div>
+    </div>
+    <div style="padding:16px 18px 14px">
+      <canvas id="scurveCanvas" style="width:100%;display:block"></canvas>
+      <div class="sc-stats">
+        <div class="sc-stat"><div class="sc-stat-lbl">Planned Today</div><div class="sc-stat-val" style="color:var(--charcoal)">30.87%</div></div>
+        <div class="sc-stat"><div class="sc-stat-lbl">Actual (Verified)</div><div class="sc-stat-val" style="color:var(--red)">32.30%</div></div>
+        <div class="sc-stat"><div class="sc-stat-lbl">Variance</div><div class="sc-stat-val" style="color:var(--green)">+1.43%</div></div>
+        <div class="sc-stat"><div class="sc-stat-lbl">Report Date</div><div class="sc-stat-val" style="color:var(--muted)">21-Jun</div></div>
+        <div class="sc-stat"><div class="sc-stat-lbl">Days Left</div><div class="sc-stat-val" style="color:#E67E22">71</div></div>
+        <div class="sc-stat"><div class="sc-stat-lbl">Target</div><div class="sc-stat-val" style="color:var(--teal)">100%</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Owner Workload -->
+<div class="bottom" style="grid-template-columns:1fr">
+  <div class="panel">
+    <div class="ph"><div class="ph-title">Owner / Department Workload <small>Activity count by department</small></div></div>
+    <div style="padding:16px 18px 14px" id="ownerBody"></div>
+  </div>
+</div>
+
+</div>
+<div class="footer-bar">
+  <span>IDH · B2B Scan Management · El Hana Center</span>
+  <span>Report: 21-Jun-2026 &middot; PM: Sherien Gergis &middot; Business Owner: Dr. Seham Mohamed</span>
+  <span>Source: IDH_B2B_BORG_SCAN_Dashboard_v3_LIVE_21.xlsx &middot; 61 Activities &middot; 7 Deliverables</span>
+</div>
+</div>
+
+<!-- ══ PAGE 2: ACTIVITY DASHBOARD ══ -->
+<div id="page-act" class="page">
+<div class="wrap">
+<div class="kpi-strip">
+  <div class="kpi k-total"><div class="kpi-val">61</div><div class="kpi-lbl">Total Activities</div></div>
+  <div class="kpi k-done"><div class="kpi-val">10</div><div class="kpi-lbl">✔ Completed</div></div>
+  <div class="kpi k-prog"><div class="kpi-val">14</div><div class="kpi-lbl">► In Progress</div></div>
+  <div class="kpi k-pend"><div class="kpi-val">37</div><div class="kpi-lbl">⏳ Not Started</div></div>
+  <div class="kpi k-rt"><div class="kpi-val">22</div><div class="kpi-lbl">IT Owned</div></div>
+  <div class="kpi k-idh"><div class="kpi-val">17</div><div class="kpi-lbl">Supply Chain</div></div>
+  <div class="kpi k-block"><div class="kpi-val">2</div><div class="kpi-lbl">🔴 Blockers</div></div>
+</div>
+
+<div class="nav-tabs">
+  <div class="tab active" onclick="switchTab('monthly')">📅 Monthly Activities</div>
+  <div class="tab" onclick="switchTab('responsibility')">👤 Responsibility</div>
+  <div class="tab" onclick="switchTab('status')">📊 Where We Stand</div>
+</div>
+
+<!-- TAB 1: MONTHLY -->
+<div id="tab-monthly" class="section active">
+<div class="slicer-bar" id="slicerBar">
+  <div class="slicer-group"><span class="slicer-label">Month</span>
+    <button class="slicer-btn active" data-filter="month" data-val="all" onclick="applyFilter('month','all',this)">All</button>
+    <button class="slicer-btn" data-filter="month" data-val="Apr" onclick="applyFilter('month','Apr',this)">April</button>
+    <button class="slicer-btn" data-filter="month" data-val="May" onclick="applyFilter('month','May',this)">May</button>
+    <button class="slicer-btn" data-filter="month" data-val="Jun" onclick="applyFilter('month','Jun',this)">June</button>
+    <button class="slicer-btn" data-filter="month" data-val="Jul" onclick="applyFilter('month','Jul',this)">July</button>
+    <button class="slicer-btn" data-filter="month" data-val="Aug" onclick="applyFilter('month','Aug',this)">August</button>
+  </div>
+  <div class="slicer-sep"></div>
+  <div class="slicer-group"><span class="slicer-label">Status</span>
+    <button class="slicer-btn active" data-filter="status" data-val="all" onclick="applyFilter('status','all',this)">All</button>
+    <button class="slicer-btn s-done" data-filter="status" data-val="✔" onclick="applyFilter('status','✔',this)">✔ Done</button>
+    <button class="slicer-btn s-prog" data-filter="status" data-val="►" onclick="applyFilter('status','►',this)">► Active</button>
+    <button class="slicer-btn s-pend" data-filter="status" data-val="⏳" onclick="applyFilter('status','⏳',this)">⏳ Pending</button>
+  </div>
+  <div class="slicer-sep"></div>
+  <div class="slicer-group"><span class="slicer-label">Owner</span>
+    <button class="slicer-btn active" data-filter="owner" data-val="all" onclick="applyFilter('owner','all',this)">All</button>
+    <button class="slicer-btn" data-filter="owner" data-val="Facilities" onclick="applyFilter('owner','Facilities',this)">Facilities</button>
+    <button class="slicer-btn" data-filter="owner" data-val="Finance" onclick="applyFilter('owner','Finance',this)">Finance</button>
+    <button class="slicer-btn" data-filter="owner" data-val="HR" onclick="applyFilter('owner','HR',this)">HR</button>
+    <button class="slicer-btn" data-filter="owner" data-val="IT" onclick="applyFilter('owner','IT',this)">IT</button>
+    <button class="slicer-btn" data-filter="owner" data-val="Marketing" onclick="applyFilter('owner','Marketing',this)">Marketing</button>
+    <button class="slicer-btn" data-filter="owner" data-val="PMO" onclick="applyFilter('owner','PMO',this)">PMO</button>
+    <button class="slicer-btn" data-filter="owner" data-val="SC" onclick="applyFilter('owner','SC',this)">Supply Chain</button>
+    <button class="slicer-btn" data-filter="owner" data-val="Sales" onclick="applyFilter('owner','Sales',this)">Sales</button>
+  </div>
+  <div class="slicer-sep"></div>
+  <div class="slicer-group"><span class="slicer-label">Deliverable</span>
+    <button class="slicer-btn active" data-filter="del" data-val="all" onclick="applyFilter('del','all',this)">All</button>
+    <button class="slicer-btn" data-filter="del" data-val="A" onclick="applyFilter('del','A',this)">A</button>
+    <button class="slicer-btn" data-filter="del" data-val="B" onclick="applyFilter('del','B',this)">B</button>
+    <button class="slicer-btn" data-filter="del" data-val="C" onclick="applyFilter('del','C',this)">C</button>
+    <button class="slicer-btn" data-filter="del" data-val="D" onclick="applyFilter('del','D',this)">D</button>
+    <button class="slicer-btn" data-filter="del" data-val="E" onclick="applyFilter('del','E',this)">E</button>
+    <button class="slicer-btn" data-filter="del" data-val="F" onclick="applyFilter('del','F',this)">F</button>
+    <button class="slicer-btn" data-filter="del" data-val="G" onclick="applyFilter('del','G',this)">G</button>
+  </div>
+  <div class="slicer-sep"></div>
+  <div class="slicer-group"><span class="slicer-label">Category</span>
+    <button class="slicer-btn active" data-filter="cat" data-val="all" onclick="applyFilter('cat','all',this)">All</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Branding" onclick="applyFilter('cat','Branding',this)">Branding</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Commercial" onclick="applyFilter('cat','Commercial',this)">Commercial</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Costing" onclick="applyFilter('cat','Costing',this)">Costing</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Infrastructure" onclick="applyFilter('cat','Infrastructure',this)">Infrastructure</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Legal" onclick="applyFilter('cat','Legal',this)">Legal</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Licensing" onclick="applyFilter('cat','Licensing',this)">Licensing</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Master Data" onclick="applyFilter('cat','Master Data',this)">Master Data</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Operations" onclick="applyFilter('cat','Operations',this)">Operations</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Procurement" onclick="applyFilter('cat','Procurement',this)">Procurement</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Recruitment" onclick="applyFilter('cat','Recruitment',this)">Recruitment</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Sales" onclick="applyFilter('cat','Sales',this)">Sales</button>
+    <button class="slicer-btn" data-filter="cat" data-val="Software" onclick="applyFilter('cat','Software',this)">Software</button>
+    <button class="slicer-btn" data-filter="cat" data-val="System" onclick="applyFilter('cat','System',this)">System</button>
+  </div>
+  <button class="slicer-reset" onclick="resetFilters()">✕ Reset</button>
+  <span class="slicer-results" id="slicerCount">61 activities</span>
+</div>
+<div class="month-grid" id="monthlyGrid"></div>
+</div>
+
+<!-- TAB 2: RESPONSIBILITY -->
+<div id="tab-responsibility" class="section">
+<div class="resp-grid" id="respGrid"></div>
+</div>
+
+<!-- TAB 3: WHERE WE STAND -->
+<div id="tab-status" class="section">
+<div class="stand-grid" id="standGrid"></div>
+</div>
+
+<div class="footer">
+  <span>IDH · B2B Scan Management · El Hana Center</span>
+  <span>Report: 21-Jun-2026 &middot; PM: Sherien Gergis</span>
+  <span>Source: v3_LIVE_21.xlsx &middot; 61 Activities &middot; 7 Deliverables</span>
+</div>
+</div>
+</div>
+
+<script>
+function switchPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.master-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+const DELS=[{code:'A',name:"Contract & Commercial",wt:10,ev:10.0,done:2,prog:0,pend:0,pct:100.0,color:'#C8102E'},{code:'B',name:"IT Infrastructure – Network",wt:20,ev:6.5,done:3,prog:3,pend:6,pct:32.5,color:'#1E40AF'},{code:'C',name:"IT Infrastructure – Hardware & Servers",wt:20,ev:3.5,done:3,prog:2,pend:15,pct:17.5,color:'#065F46'},{code:'D',name:"PACS / RIS System (Paxera)",wt:15,ev:5.4,done:1,prog:1,pend:3,pct:36.0,color:'#9A3412'},{code:'E',name:"Operations & HR",wt:15,ev:2.143,done:0,prog:3,pend:4,pct:14.3,color:'#4C1D95'},{code:'F',name:"Regulatory & Legal",wt:12,ev:3.257,done:0,prog:4,pend:3,pct:27.1,color:'#0C4A6E'},{code:'G',name:"Marketing & Branding",wt:8,ev:1.5,done:1,prog:1,pend:6,pct:18.8,color:'#6B21A8'}];
+const ACTS=[
+  {code:"A1",del:"A",cat:"Commercial",owner:"Sales",month:"Apr",status:"✔",pct:100,desc:"Signing the contract",person:"Lamiaa Abdelkader",notes:null,pStart:"2026-04-01",pEnd:"2026-04-30"},
+  {code:"A2",del:"A",cat:"Costing",owner:"Finance",month:"May",status:"✔",pct:100,desc:"Profit margin confirmation",person:"Mina Samir ",notes:null,pStart:"2026-05-10",pEnd:"2026-06-04"},
+  {code:"B1",del:"B",cat:"Procurement",owner:"IT",month:"Jun",status:"✔",pct:100,desc:"Switches – procurement & delivery",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-16",pEnd:"2026-06-16"},
+  {code:"B2",del:"B",cat:"Procurement",owner:"IT",month:"Jun",status:"✔",pct:100,desc:"Cisco phones – procurement & delivery",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-16",pEnd:"2026-06-16"},
+  {code:"B3",del:"B",cat:"Procurement",owner:"IT",month:"Jun",status:"✔",pct:100,desc:"Access points – procurement & delivery",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-16",pEnd:"2026-06-16"},
+  {code:"B4",del:"B",cat:"Infrastructure",owner:"IT",month:"Jun",status:"⏳",pct:0,desc:"Passive cabling works",person:"Moustafa Ehab / IT Team",notes:"⚠ Waiting on El Hana site owner",pStart:"2026-06-30",pEnd:"2026-07-02"},
+  {code:"B5",del:"B",cat:"Infrastructure",owner:"IT",month:"Jul",status:"⏳",pct:0,desc:"Network equipment installation",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-07-02",pEnd:"2026-07-05"},
+  {code:"B6",del:"B",cat:"Procurement",owner:"IT",month:"Jun",status:"►",pct:50,desc:"Firewalls license – PR submission",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-17",pEnd:"2026-06-21"},
+  {code:"B7",del:"B",cat:"Procurement",owner:"SC",month:"Jun",status:"►",pct:10,desc:"Firewalls license – procurement",person:"Alaa abdelhamid / Supply chain",notes:null,pStart:"2026-06-22",pEnd:"2026-07-19"},
+  {code:"B8",del:"B",cat:"Infrastructure",owner:"IT",month:"Jul",status:"⏳",pct:0,desc:"Firewalls installation",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-07-22",pEnd:"2026-07-24"},
+  {code:"B9",del:"B",cat:"Infrastructure",owner:"IT",month:"Jun",status:"⏳",pct:0,desc:"Connectivity setup",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-30",pEnd:"2026-08-28"},
+  {code:"B10",del:"B",cat:"Procurement",owner:"IT",month:"Jun",status:"►",pct:30,desc:"ISP – send requirements",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-16",pEnd:"2026-06-25"},
+  {code:"B11",del:"B",cat:"Commercial",owner:"SC",month:"Jun",status:"⏳",pct:0,desc:"ISP – signing offer",person:"Alaa abdelhamid / Supply chain",notes:null,pStart:"2026-06-25",pEnd:"2026-06-30"},
+  {code:"B12",del:"B",cat:"Infrastructure",owner:"IT",month:"Jun",status:"⏳",pct:0,desc:"ISP – install connection",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-30",pEnd:"2026-08-28"},
+  {code:"C1",del:"C",cat:"Procurement",owner:"IT",month:"Jun",status:"✔",pct:100,desc:"Confirm Workstation specs with Paxera",person:"Mohamed Eisa / IT Team",notes:null,pStart:"2026-06-16",pEnd:"2026-06-16"},
+  {code:"C1",del:"C",cat:"Commercial",owner:"SC",month:"Jun",status:"►",pct:40,desc:"WorkStation Paxera Modular offer ",person:"Alaa abdelhamid / Supply chain",notes:null,pStart:"2026-06-17",pEnd:"2026-07-25"},
+  {code:"C2",del:"C",cat:"Procurement",owner:"IT",month:"Jun",status:"⏳",pct:0,desc:"WorkStation Paxera Modular – PR submission",person:"Mohamed Eisa / IT Team",notes:null,pStart:"2026-06-26",pEnd:"2026-07-28"},
+  {code:"C3",del:"C",cat:"Procurement",owner:"SC",month:"Jun",status:"⏳",pct:0,desc:"Supply Chain PO – Workstation",person:"Alaa abdelhamid / Supply chain",notes:null,pStart:"2026-06-22",pEnd:"2026-06-26"},
+  {code:"C4",del:"C",cat:"Procurement",owner:"SC",month:"Jun",status:"⏳",pct:0,desc:"Receiving Server HW",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-06-26",pEnd:"2026-07-25"},
+  {code:"C5",del:"C",cat:"Infrastructure",owner:"IT",month:"Jul",status:"⏳",pct:0,desc:"IT requisition to SC – server from WH",person:"Mohamed Eisa / IT Team",notes:null,pStart:"2026-07-25",pEnd:"2026-07-27"},
+  {code:"C6",del:"C",cat:"Infrastructure",owner:"IT",month:"Jul",status:"⏳",pct:0,desc:"IT requisition – Facility team & WH dispatch",person:"Mohamed Eisa / IT Team",notes:null,pStart:"2026-07-15",pEnd:"2026-07-20"},
+  {code:"C6",del:"C",cat:"Infrastructure",owner:"Facilities",month:"Jul",status:"✔",pct:100,desc:"UPS 6K or UPS 3K Approval",person:"Amr Medhat ",notes:null,pStart:"2026-07-15",pEnd:"2026-07-20"},
+  {code:"C7",del:"C",cat:"Procurement",owner:"SC",month:"Jul",status:"⏳",pct:0,desc:"UPS 6K or UPS 3K – delivery",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-07-15",pEnd:"2026-07-20"},
+  {code:"C8",del:"C",cat:"Procurement",owner:"SC",month:"Jul",status:"⏳",pct:0,desc:"PDUs / EPDU MI 0U – delivery",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-07-15",pEnd:"2026-07-20"},
+  {code:"C9",del:"C",cat:"Infrastructure",owner:"IT",month:"Aug",status:"⏳",pct:0,desc:"IT requisition to SC – Workstations from WH",person:"Mohamed Eisa / IT Team",notes:null,pStart:"2026-08-15",pEnd:"2026-08-30"},
+  {code:"C10",del:"C",cat:"Procurement",owner:"SC",month:"Aug",status:"⏳",pct:0,desc:"Desktop Dell Pro Tower QCT1250 i5 – delivery",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-08-15",pEnd:"2026-08-30"},
+  {code:"C11",del:"C",cat:"Procurement",owner:"SC",month:"Aug",status:"⏳",pct:0,desc:"22-Inch HD LED Monitor – delivery",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-08-15",pEnd:"2026-08-30"},
+  {code:"C12",del:"C",cat:"Procurement",owner:"SC",month:"Aug",status:"⏳",pct:0,desc:"Barcode printer Honeywell PC23D – delivery",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-08-15",pEnd:"2026-08-30"},
+  {code:"C13",del:"C",cat:"Procurement",owner:"SC",month:"Aug",status:"⏳",pct:0,desc:"Attendance device ZK IN05-A – delivery",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-08-15",pEnd:"2026-08-30"},
+  {code:"C14",del:"C",cat:"Procurement",owner:"SC",month:"Aug",status:"⏳",pct:0,desc:"Printer Xerox Multifunction – delivery",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-08-15",pEnd:"2026-08-30"},
+  {code:"C15",del:"C",cat:"Procurement",owner:"IT",month:"Jun",status:"✔",pct:100,desc:"Barcode Zebra 420 – PR created",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-16",pEnd:"2026-06-16"},
+  {code:"C16",del:"C",cat:"Procurement",owner:"SC",month:"Jun",status:"►",pct:10,desc:"Barcode Zebra 420 – Supply Chain PO",person:"Alaa abdelhamid / Supply chain",notes:null,pStart:"2026-06-17",pEnd:"2026-06-25"},
+  {code:"C17",del:"C",cat:"Procurement",owner:"SC",month:"Jun",status:"⏳",pct:0,desc:"Receiving Barcode Zebra 420",person:"Alaa abdelhamid / Supply chain",notes:null,pStart:"2026-06-25",pEnd:"2026-07-24"},
+  {code:"C18",del:"C",cat:"Procurement",owner:"SC",month:"Aug",status:"⏳",pct:0,desc:"Send Barcode Zebra 420 to branch",person:"Supply Chain Team / Warehouse",notes:null,pStart:"2026-08-15",pEnd:"2026-08-30"},
+  {code:"D1",del:"D",cat:"Software",owner:"IT",month:"Jun",status:"✔",pct:100,desc:"Paxera license – 15,000 cases/yr, 10 users",person:"Haytham Hesham / IT Team",notes:null,pStart:"2026-06-16",pEnd:"2026-06-16"},
+  {code:"D2",del:"D",cat:"Commercial",owner:"SC",month:"Jun",status:"►",pct:80,desc:"Paxera offer received and signing off",person:"Alaa abdelhamid / Supply chain",notes:null,pStart:"2026-06-16",pEnd:"2026-06-22"},
+  {code:"D3",del:"D",cat:"Infrastructure",owner:"IT",month:"Jul",status:"⏳",pct:0,desc:"Paxera server installation",person:"Haytham Hesham / IT Team",notes:null,pStart:"2026-07-25",pEnd:"2026-07-26"},
+  {code:"D4",del:"D",cat:"Software",owner:"IT",month:"Jul",status:"⏳",pct:0,desc:"Paxera – receiving software license",person:"Haytham Hesham / IT Team",notes:null,pStart:"2026-07-25",pEnd:"2026-08-02"},
+  {code:"D5",del:"D",cat:"Software",owner:"IT",month:"Jul",status:"⏳",pct:0,desc:"Server configuration with modalities",person:"Haytham Hesham / IT Team",notes:null,pStart:"2026-07-25",pEnd:"2026-08-23"},
+  {code:"E1",del:"E",cat:"Recruitment",owner:"HR",month:"Jun",status:"►",pct:50,desc:"Appoint Medical Director & prepare documents",person:"Mahmoud Maher",notes:null,pStart:"2026-06-17",pEnd:"2026-06-25"},
+  {code:"E2",del:"E",cat:"Recruitment",owner:"HR",month:"Jun",status:"►",pct:30,desc:"Employees' licensing documentation",person:"Mahmoud Maher",notes:null,pStart:"2026-06-21",pEnd:"2026-07-05"},
+  {code:"E3",del:"E",cat:"Recruitment",owner:"HR",month:"Jun",status:"►",pct:20,desc:"Complete hiring of branch workforce",person:"Mahmoud Maher",notes:null,pStart:"2026-06-21",pEnd:"2026-08-15"},
+  {code:"E4",del:"E",cat:"Operations",owner:"SC",month:"Jun",status:"⏳",pct:0,desc:"Create Plant – BORG SCAN EL HANA / Storage Loc",person:"Amr sanad",notes:null,pStart:"2026-06-28",pEnd:"2026-07-01"},
+  {code:"E5",del:"E",cat:"Operations",owner:"IT",month:"Jun",status:"⏳",pct:0,desc:"Vendor creation – Profit / Cost Center",person:"Osama Helmy",notes:null,pStart:"2026-06-28",pEnd:"2026-07-01"},
+  {code:"E6",del:"E",cat:"Master Data",owner:"Finance",month:"Jun",status:"⏳",pct:0,desc:"LMS Creation",person:"Yasmin Elgebally",notes:null,pStart:"2026-06-28",pEnd:"2026-07-01"},
+  {code:"E7",del:"E",cat:"System",owner:"IT",month:"Jun",status:"⏳",pct:0,desc:"Email creation",person:"Moustafa Ehab / IT Team",notes:null,pStart:"2026-06-28",pEnd:"2026-07-01"},
+  {code:"F1",del:"F",cat:"Legal",owner:"HR",month:"Jun",status:"►",pct:60,desc:"Lease Contract – legal readiness & documentation",person:"Mohamed Gaber ",notes:null,pStart:"2026-06-15",pEnd:"2026-06-30"},
+  {code:"F2",del:"F",cat:"Licensing",owner:"HR",month:"Jun",status:"►",pct:40,desc:"Civil Defense Approval – fire & safety",person:"Ahmed Omar (Licensing)",notes:null,pStart:"2026-06-15",pEnd:"2026-06-30"},
+  {code:"F3",del:"F",cat:"Licensing",owner:"HR",month:"Jun",status:"►",pct:40,desc:"Engineering Layout – approved facility drawings",person:"Ahmed Omar (Licensing)",notes:null,pStart:"2026-06-15",pEnd:"2026-06-30"},
+  {code:"F4",del:"F",cat:"Operations",owner:"PMO",month:"Jun",status:"►",pct:50,desc:"Equipment Maintenance contracts & reports",person:"Sherine Gergis",notes:null,pStart:"2026-06-15",pEnd:"2026-06-30"},
+  {code:"F5",del:"F",cat:"Licensing",owner:"HR",month:"Jun",status:"⏳",pct:0,desc:"Executive Office Approval",person:"Hesham Akoush",notes:null,pStart:"2026-06-30",pEnd:"2026-08-14"},
+  {code:"F6",del:"F",cat:"Operations",owner:"PMO",month:"Jun",status:"⏳",pct:0,desc:"Medical Waste Management – disposal contract",person:"Sherine Gergis",notes:null,pStart:"2026-06-30",pEnd:"2026-08-29"},
+  {code:"F7",del:"F",cat:"Licensing",owner:"HR",month:"Aug",status:"⏳",pct:0,desc:"Pre-Opening Inspection",person:"Hesham Akoush",notes:"Pending licensing dept action",pStart:"2026-08-31",pEnd:"2026-08-31"},
+  {code:"G1",del:"G",cat:"Branding",owner:"Marketing",month:"Aug",status:"⏳",pct:0,desc:"Internal Brand – materials & signage",person:"Marketing Dept",notes:null,pStart:"2026-08-01",pEnd:"2026-08-31"},
+  {code:"G2",del:"G",cat:"Branding",owner:"Marketing",month:"Aug",status:"⏳",pct:0,desc:"External Brand – outdoor & facility branding",person:"Marketing Dept",notes:null,pStart:"2026-08-01",pEnd:"2026-08-31"},
+  {code:"G3",del:"G",cat:"Branding",owner:"Marketing",month:"Aug",status:"⏳",pct:0,desc:"Social Media Posts",person:"Marketing Dept",notes:null,pStart:"2026-08-01",pEnd:"2026-08-31"},
+  {code:"G4",del:"G",cat:"Branding",owner:"Marketing",month:"Aug",status:"⏳",pct:0,desc:"Messaging + Branch Stands",person:"Marketing Dept",notes:null,pStart:"2026-08-25",pEnd:"2026-08-31"},
+  {code:"G5",del:"G",cat:"Sales",owner:"Marketing",month:"Aug",status:"⏳",pct:0,desc:"Partnerships",person:"Partnership Team",notes:null,pStart:"2026-08-01",pEnd:"2026-08-31"},
+  {code:"G6",del:"G",cat:"Branding",owner:"Marketing",month:"Aug",status:"⏳",pct:0,desc:"Google Maps & Flyers",person:"Marketing Dept",notes:null,pStart:"2026-08-17",pEnd:"2026-08-25"},
+  {code:"G7",del:"G",cat:"Branding",owner:"Marketing",month:"Jun",status:"✔",pct:100,desc:"Outdoor Advertising – Phase 1",person:"Marketing Dept",notes:null,pStart:"2026-06-15",pEnd:"2026-06-16"},
+  {code:"G8",del:"G",cat:"Branding",owner:"Marketing",month:"Jun",status:"►",pct:50,desc:"Outdoor Advertising – Phase 2",person:"Marketing Dept",notes:null,pStart:"2026-06-16",pEnd:"2026-06-30"}
+];
+const DELIVERABLES={"A": "Contract & Commercial", "B": "IT Infrastructure – Network", "C": "IT Infrastructure – Hardware & Servers", "D": "PACS / RIS System (Paxera)", "E": "Operations & HR", "F": "Regulatory & Legal", "G": "Marketing & Branding"};
+const DEL_COLORS={"A": "#C8102E", "B": "#1E40AF", "C": "#065F46", "D": "#9A3412", "E": "#4C1D95", "F": "#0C4A6E", "G": "#6B21A8"};
+const OWNER_LABELS={"IT": "IT", "SC": "Supply Chain", "Sales": "Sales", "Operations": "Operations", "Marketing": "Marketing", "HR": "HR", "Finance": "Finance", "Facilities": "Facilities", "PMO": "PMO"};
+const OWNER_COLORS2={"IT": "#1F4E78", "SC": "#B45309", "Sales": "#0E7490", "Operations": "#065F46", "Marketing": "#6B21A8", "HR": "#9D174D", "Finance": "#0369A1", "Facilities": "#047857", "PMO": "#C8102E"};
+const CAT_COLORS2={"Commercial": "#854D0E", "Infrastructure": "#1E40AF", "Legal": "#991B1B", "Operations": "#065F46", "Procurement": "#9A3412", "Software": "#0C4A6E", "Branding": "#6B21A8", "Costing": "#0369A1", "Recruitment": "#9D174D", "Master Data": "#065F46", "System": "#1F4E78", "Licensing": "#9A3412", "Sales": "#0E7490", "HR": "#9D174D"};
+
+// Timeline W1–W23 (today = W13)
+const WEEKS_TL=Array.from({length:23},(_,i)=>'W'+(i+1));
+const TODAY_WEEK_IDX=12;
+const tl=document.getElementById('tlBar');
+tl.style.gridTemplateColumns='repeat(23,1fr)';
+WEEKS_TL.forEach((w,i)=>{const el=document.createElement('div');el.className='tl-w '+(i<TODAY_WEEK_IDX?'past':i===TODAY_WEEK_IDX?'now':'future');el.textContent=w;tl.appendChild(el);});
+
+// Deliverables table
+const tbody=document.getElementById('dtblBody');
+DELS.forEach(d=>{const tr=document.createElement('tr');tr.innerHTML=`<td style="width:26px;padding-right:0"><span class="dn" style="background:${d.color}">${d.code}</span></td><td><span class="dname tooltip" data-tip="${d.done+d.prog+d.pend} acts · Wt: ${d.wt}%">${d.name}</span></td><td style="text-align:center;font:500 11px/1 var(--mono);color:var(--muted)">${d.wt}%</td><td style="text-align:center"><span class="ev-tag ev-on">${d.ev.toFixed(3)}%</span></td><td class="cnt-done">${d.done||'—'}</td><td class="cnt-prog">${d.prog||'—'}</td><td class="cnt-pend">${d.pend}</td><td><div class="prog-row"><div class="prog-bg"><div class="prog-bar" style="width:${d.pct}%;background:${d.color}"></div></div><span class="prog-pct">${d.pct.toFixed(0)}%</span></div></td>`;tbody.appendChild(tr);});
+const totRow=document.createElement('tr');totRow.className='tot';
+totRow.innerHTML=`<td></td><td><span class="dname">PROJECT TOTAL</span></td><td style="text-align:center;font:600 11px/1 var(--mono)">100%</td><td style="text-align:center"><span class="ev-tag ev-on">32.300%</span></td><td class="cnt-done">10</td><td class="cnt-prog">14</td><td class="cnt-pend">37</td><td><div class="prog-row"><div class="prog-bg"><div class="prog-bar" style="width:32.3%;background:#fff"></div></div><span class="prog-pct">32.3%</span></div></td>`;
+tbody.appendChild(totRow);
+
+// Donut
+(function(){const svg=document.getElementById('donutSvg');const cx=65,cy=65,r=46,sw=12,circ=2*Math.PI*r;const bg=document.createElementNS('http://www.w3.org/2000/svg','circle');bg.setAttribute('cx',cx);bg.setAttribute('cy',cy);bg.setAttribute('r',r);bg.setAttribute('fill','none');bg.setAttribute('stroke','#F1EDE5');bg.setAttribute('stroke-width',sw);svg.appendChild(bg);let offset=0;[{v:10,c:'#2E7D32'},{v:14,c:'#B45309'},{v:37,c:'#BDC3C7'}].forEach(s=>{const pct=s.v/61,dash=pct*circ,gap=circ-dash;const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',r);c.setAttribute('fill','none');c.setAttribute('stroke',s.c);c.setAttribute('stroke-width',sw);c.setAttribute('stroke-dasharray',`${dash} ${gap}`);c.setAttribute('stroke-dashoffset',-offset*circ);c.setAttribute('stroke-linecap','round');c.style.transformOrigin='center';c.style.transform='rotate(-90deg)';svg.appendChild(c);offset+=pct;});})();
+
+// Categories
+const catCounts={};ACTS.forEach(a=>{catCounts[a.cat]=(catCounts[a.cat]||0)+1});
+const catBody=document.getElementById('catBody');
+Object.keys(catCounts).sort((a,b)=>catCounts[b]-catCounts[a]).forEach(c=>{const row=document.createElement('div');row.className='cat-row';const col=CAT_COLORS2[c]||'#6B6F78';row.innerHTML=`<span class="cat-nm">${c}</span><div class="cat-track"><div class="cat-fill" style="width:${catCounts[c]/61*100}%;background:${col}"></div></div><span class="cat-n" style="color:${col}">${catCounts[c]}</span>`;catBody.appendChild(row);});
+
+// Department Performance (project page)
+function buildProjDeptPerf(){
+  const body=document.getElementById('projDeptBody');
+  const badge=document.getElementById('projDeptBadge');
+  if(!body)return;
+  const TODAY_D=new Date('2026-06-21');
+  const owners=[...new Set(ACTS.map(a=>a.owner))];
+  const deptPerf=owners.map(owner=>{
+    const da=ACTS.filter(a=>a.owner===owner);
+    const n=da.length,done=da.filter(a=>a.status==='✔').length,prog=da.filter(a=>a.status==='►').length,pend=da.filter(a=>a.status==='⏳').length;
+    const lateActs=da.filter(a=>{if(a.status==='✔'||!a.pEnd)return false;return new Date(a.pEnd)<TODAY_D;});
+    const maxDL=lateActs.reduce((m,a)=>{const d=Math.round((TODAY_D-new Date(a.pEnd))/86400000);return Math.max(m,d);},0);
+    const avgPct=Math.round(da.reduce((s,a)=>s+a.pct,0)/n);
+    return {owner,n,done,prog,pend,late:lateActs.length,maxDL,avgPct};
+  }).sort((a,b)=>b.late-a.late||b.maxDL-a.maxDL);
+  body.innerHTML=deptPerf.map(d=>{
+    const col=OWNER_COLORS2[d.owner]||'#6B6F78';
+    const hasLate=d.late>0;
+    const lateBadge=hasLate?`<span class="dept-perf-late-badge" style="background:#FEE2E2;color:#991B1B">🔴 ${d.late} late</span>`:`<span class="dept-perf-late-badge" style="background:var(--green-bg);color:var(--green)">✔ On track</span>`;
+    return `<div class="dept-perf-row ${hasLate?'has-late':''}">
+      <div class="dept-perf-icon" style="background:${col}18;color:${col};width:28px;height:28px;font-size:10px">${(OWNER_LABELS[d.owner]||d.owner).slice(0,2).toUpperCase()}</div>
+      <span class="dept-perf-name" style="width:100px;font-size:10.5px">${OWNER_LABELS[d.owner]||d.owner}</span>
+      <div class="dept-perf-bar-track"><div class="dept-perf-seg-done" style="width:${d.done/d.n*100}%"></div><div class="dept-perf-seg-prog" style="width:${d.prog/d.n*100}%"></div><div class="dept-perf-seg-pend" style="width:${d.pend/d.n*100}%"></div></div>
+      <span class="dept-perf-stat" style="color:${col}">${d.avgPct}%</span>
+      <span style="font:500 9px/1 var(--mono);color:var(--muted);width:30px;text-align:right;flex-shrink:0">${d.n} act</span>
+      ${lateBadge}</div>`;
+  }).join('');
+  const totalLateDepts=deptPerf.filter(d=>d.late>0).length;
+  if(badge){badge.textContent=totalLateDepts>0?totalLateDepts+' dept(s) late':'All on track';badge.className='badge '+(totalLateDepts>0?'badge-red':'badge-green');}
+}
+buildProjDeptPerf();
+
+// Owner workload
+const ownerBody=document.getElementById('ownerBody');
+const ownerCounts={};ACTS.forEach(a=>{ownerCounts[a.owner]=(ownerCounts[a.owner]||0)+1});
+const maxOwn=Math.max(...Object.values(ownerCounts));
+Object.keys(ownerCounts).sort((a,b)=>ownerCounts[b]-ownerCounts[a]).forEach(o=>{
+  const col=OWNER_COLORS2[o]||'#6B6F78';const row=document.createElement('div');
+  row.style.cssText='display:flex;align-items:center;gap:9px;margin-bottom:9px';
+  row.innerHTML=`<span style="font-size:10.5px;font-weight:600;color:var(--muted);width:108px;flex-shrink:0">${OWNER_LABELS[o]||o}</span><div style="flex:1;height:7px;background:var(--cream);border-radius:4px;overflow:hidden;border:1px solid var(--border)"><div style="height:100%;border-radius:4px;width:${ownerCounts[o]/maxOwn*100}%;background:${col}"></div></div><span style="font:600 10px/1 var(--mono);width:24px;text-align:right;color:${col}">${ownerCounts[o]}</span>`;
+  ownerBody.appendChild(row);
+});
+
+// ── S-CURVE ──
+const SCURVE={
+  labels:["W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8", "W9", "W10", "W11", "W12", "W13", "W14", "W15", "W16", "W17", "W18", "W19", "W20", "W21", "W22", "W23", "W24"],
+  dates:["01 Apr", "05 Apr", "12 Apr", "19 Apr", "26 Apr", "03 May", "10 May", "17 May", "24 May", "31 May", "07 Jun", "14 Jun", "21 Jun", "28 Jun", "05 Jul", "12 Jul", "19 Jul", "26 Jul", "02 Aug", "09 Aug", "16 Aug", "23 Aug", "30 Aug", "31 Aug"],
+  planned:[0.0, 0.6897, 1.8966, 3.1034, 4.3103, 5.0, 5.0, 6.4, 7.8, 9.2, 10.0, 10.0, 30.8693, 41.5151, 58.4215, 60.8742, 66.5269, 74.8628, 80.0426, 82.835, 85.9788, 92.2485, 97.9857, 100.0],
+  actual:[0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 6.7, 6.7, 6.7, 6.7, 11.7, 11.7, 32.3, null, null, null, null, null, null, null, null, null, null, null],
+  todayIdx:12
+};
+function drawSCurve(){
+  const canvas=document.getElementById('scurveCanvas');if(!canvas)return;
+  const dpr=window.devicePixelRatio||1,cssW=canvas.parentElement.clientWidth-36,cssH=Math.round(cssW*.37);
+  canvas.style.height=cssH+'px';canvas.width=cssW*dpr;canvas.height=cssH*dpr;
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const W=cssW,H=cssH,P={top:24,right:20,bottom:50,left:50};
+  const cW=W-P.left-P.right,cH=H-P.top-P.bottom,N=SCURVE.labels.length;
+  const RED='#C8102E',DARK='#14151A',GREEN='#2E7D32',GREY='#E3E1DC',MUTED='#94A3B8',TEAL='#285350';
+  const xP=i=>P.left+(i/(N-1))*cW,yP=pct=>P.top+cH-(pct/100)*cH;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  [0,20,40,60,80,100].forEach(v=>{const y=yP(v);ctx.beginPath();ctx.strokeStyle=v===0||v===100?'#CBD5E1':GREY;ctx.lineWidth=v===0||v===100?1.2:.7;ctx.setLineDash([]);ctx.moveTo(P.left,y);ctx.lineTo(P.left+cW,y);ctx.stroke();ctx.fillStyle=MUTED;ctx.font="500 9px 'JetBrains Mono',monospace";ctx.textAlign='right';ctx.fillText(v+'%',P.left-7,y+3.5);});
+  SCURVE.labels.forEach((lbl,i)=>{const x=xP(i);if(i>0){ctx.beginPath();ctx.strokeStyle=GREY;ctx.lineWidth=.5;ctx.setLineDash([3,3]);ctx.moveTo(x,P.top);ctx.lineTo(x,P.top+cH);ctx.stroke();ctx.setLineDash([]);}if(i%3===0||i===N-1||i===SCURVE.todayIdx){ctx.fillStyle=MUTED;ctx.font="500 8.5px 'JetBrains Mono',monospace";ctx.textAlign='center';ctx.fillText(lbl,x,P.top+cH+14);ctx.fillStyle='#BDC3C7';ctx.font="400 7.5px 'JetBrains Mono',monospace";ctx.fillText(SCURVE.dates[i],x,P.top+cH+26);}});
+  const todayX=xP(SCURVE.todayIdx);
+  ctx.beginPath();ctx.strokeStyle=RED;ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.moveTo(todayX,P.top-10);ctx.lineTo(todayX,P.top+cH);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=RED;ctx.font="700 9px 'JetBrains Mono',monospace";ctx.textAlign='center';ctx.fillText('TODAY',todayX,P.top-13);
+  const actualPts=SCURVE.actual.map((v,i)=>v!==null?{v,i}:null).filter(Boolean);
+  if(actualPts.length>1){
+    ctx.beginPath();ctx.moveTo(xP(actualPts[0].i),yP(SCURVE.planned[actualPts[0].i]));
+    for(let i=1;i<actualPts.length;i++)ctx.lineTo(xP(actualPts[i].i),yP(SCURVE.planned[actualPts[i].i]));
+    for(let i=actualPts.length-1;i>=0;i--)ctx.lineTo(xP(actualPts[i].i),yP(actualPts[i].v));
+    ctx.closePath();
+    const isAhead=actualPts[actualPts.length-1].v>=SCURVE.planned[actualPts[actualPts.length-1].i];
+    ctx.fillStyle=isAhead?'rgba(46,125,50,.08)':'rgba(200,16,46,.08)';ctx.fill();
+  }
+  ctx.beginPath();ctx.strokeStyle=DARK;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.setLineDash([]);
+  SCURVE.planned.forEach((v,i)=>{i===0?ctx.moveTo(xP(i),yP(v)):ctx.lineTo(xP(i),yP(v));});ctx.stroke();
+  SCURVE.planned.forEach((v,i)=>{ctx.beginPath();ctx.arc(xP(i),yP(v),i===SCURVE.todayIdx?5:2,0,Math.PI*2);ctx.fillStyle=i===SCURVE.todayIdx?DARK:'#fff';ctx.strokeStyle=DARK;ctx.lineWidth=1.5;ctx.fill();ctx.stroke();});
+  if(actualPts.length>1){ctx.beginPath();ctx.strokeStyle=RED;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.setLineDash([]);actualPts.forEach((pt,idx)=>{idx===0?ctx.moveTo(xP(pt.i),yP(pt.v)):ctx.lineTo(xP(pt.i),yP(pt.v));});ctx.stroke();}
+  actualPts.forEach(pt=>{const x=xP(pt.i),y=yP(pt.v);ctx.beginPath();ctx.arc(x,y,pt.i===SCURVE.todayIdx?6:3,0,Math.PI*2);ctx.fillStyle=pt.i===SCURVE.todayIdx?RED:'#fff';ctx.strokeStyle=RED;ctx.lineWidth=2;ctx.fill();ctx.stroke();if(pt.i===SCURVE.todayIdx){const lbl=pt.v.toFixed(2)+'%';ctx.font="700 10px 'JetBrains Mono',monospace";const lw=ctx.measureText(lbl).width+14;ctx.fillStyle=RED;ctx.beginPath();ctx.roundRect(x-lw/2,y-30,lw,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(lbl,x,y-17.5);}});
+  const py=yP(SCURVE.planned[SCURVE.todayIdx]);const planLbl=SCURVE.planned[SCURVE.todayIdx].toFixed(2)+'%';
+  ctx.font="700 10px 'JetBrains Mono',monospace";const planW=ctx.measureText(planLbl).width+14;
+  ctx.fillStyle=DARK;ctx.beginPath();ctx.roundRect(todayX-planW/2,py+10,planW,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(planLbl,todayX,py+23);
+  const actualToday=SCURVE.actual[SCURVE.todayIdx],variance=actualToday-SCURVE.planned[SCURVE.todayIdx],midY=(yP(actualToday)+py)/2;
+  ctx.font="700 10px 'Sora',sans-serif";ctx.fillStyle=variance>=0?GREEN:RED;ctx.textAlign='left';ctx.fillText((variance>=0?'▲ +':'▼ ')+variance.toFixed(2)+'% '+(variance>=0?'ahead':'behind'),todayX+16,midY+4);
+  ctx.font="600 9px 'JetBrains Mono',monospace";ctx.fillStyle=TEAL;ctx.textAlign='right';ctx.fillText('Target: 100%',xP(N-1)-4,yP(100)-6);
+  ctx.fillStyle=MUTED;ctx.font="500 9px 'Sora',sans-serif";ctx.textAlign='center';ctx.fillText('Project Weeks (01 Apr – 31 Aug 2026)',P.left+cW/2,H-4);
+  const badge=document.getElementById('scVarianceBadge');
+  if(badge){const v=variance;badge.textContent=(v>=0?'+':'')+v.toFixed(2)+'% '+(v>=0?'Ahead ▲':'Behind ▼');badge.className='badge '+(v>=0?'badge-green':'badge-red');}
+}
+window.addEventListener('load',drawSCurve);
+window.addEventListener('resize',drawSCurve);
+const _origSP=switchPage;
+switchPage=function(name,btn){_origSP(name,btn);if(name==='proj')setTimeout(drawSCurve,60);};
+
+// ── ACTIVITY DASHBOARD ──
+const MONTH_ORDER=['Apr','May','Jun','Jul','Aug'];
+const MONTH_COLORS={Apr:'#0E7490',May:'#0369A1',Jun:'#1D4ED8',Jul:'#4338CA',Aug:'#7C3AED'};
+const MONTH_FULL={Apr:'April 2026',May:'May 2026',Jun:'June 2026',Jul:'July 2026',Aug:'August 2026'};
+function statusColor(s){return s==='✔'?'var(--green)':s==='►'?'var(--amber)':'var(--grey)';}
+function pctBarColor(s,pct){if(s==='✔')return 'var(--green)';if(s==='►')return pct>=70?'var(--amber)':'#F59E0B';return '#CBD5E1';}
+function switchTab(name){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');event.target.classList.add('active');}
+
+// TAB 1: MONTHLY
+function buildMonthly(){
+  const grid=document.getElementById('monthlyGrid');
+  MONTH_ORDER.forEach(mon=>{
+    const acts=ACTS.filter(a=>a.month===mon);if(!acts.length)return;
+    const done=acts.filter(a=>a.status==='✔').length,prog=acts.filter(a=>a.status==='►').length,pend=acts.filter(a=>a.status==='⏳').length;
+    const blockCount=acts.filter(a=>a.notes).length;
+    const col=MONTH_COLORS[mon];
+    const rows=acts.map(a=>{
+      const isB=!!a.notes,ownClass='owner-'+a.owner.replace(/ /g,'_'),catClass='cat-'+a.cat.replace(/ /g,'_'),delClass='del-'+a.del;
+      return `<tr class="${isB?'blocker-row':''}">
+        <td><span class="code-badge">${a.code}</span></td>
+        <td><span class="del-tag ${delClass}" style="font:600 9px/1 var(--mono);padding:2px 6px;border-radius:3px">${a.del}: ${DELIVERABLES[a.del].split(' ').slice(0,2).join(' ')}</span></td>
+        <td><span class="cat-tag ${catClass}">${a.cat}</span></td>
+        <td class="desc-text">${a.desc}${isB?'&nbsp;<span style="font:700 9px/1 var(--mono);color:var(--red);background:#FEE2E2;padding:1px 5px;border-radius:3px;margin-left:4px">⚠ '+a.notes+'</span>':''}</td>
+        <td><span class="owner-tag ${ownClass}">${OWNER_LABELS[a.owner]||a.owner}</span></td>
+        <td style="text-align:center"><span style="color:${statusColor(a.status)};font-size:13px">${a.status}</span></td>
+        <td><div class="pct-bar"><div class="pct-track"><div class="pct-fill" style="width:${a.pct}%;background:${pctBarColor(a.status,a.pct)}"></div></div><span class="pct-val">${a.pct}%</span></div></td>
+        <td><span style="font:500 10px/1 var(--mono);color:var(--muted)">${a.person||'—'}</span></td>
+      </tr>`;
+    }).join('');
+    const blockBadge=blockCount>0?`<span class="mpill" style="background:#FEE2E2;color:#991B1B;border:1px solid #FECACA">🔴 ${blockCount} blocked</span>`:'';
+    grid.innerHTML+=`<div class="month-block">
+      <div class="month-hdr" onclick="toggleMonth(this)">
+        <div class="month-hdr-left">
+          <div class="month-dot" style="background:${col}"></div>
+          <div class="month-name" style="color:${col}">${MONTH_FULL[mon]}</div>
+          <div class="month-pills"><span class="mpill mpill-done">✔ ${done}</span><span class="mpill mpill-prog">► ${prog}</span><span class="mpill mpill-pend">⏳ ${pend}</span>${blockBadge}</div>
+        </div>
+        <span class="month-chevron open">▼</span>
+      </div>
+      <div class="month-body">
+        <table class="act-table"><thead><tr><th>Code</th><th>Deliverable</th><th>Category</th><th>Activity</th><th class="center">Owner</th><th class="center">Status</th><th>Progress</th><th>Responsible</th></tr></thead><tbody>${rows}</tbody></table>
+      </div>
+    </div>`;
+  });
+}
+function toggleMonth(hdr){const body=hdr.nextElementSibling,chev=hdr.querySelector('.month-chevron');if(chev.classList.contains('open')){body.style.maxHeight='0';body.style.padding='0 20px';chev.classList.remove('open');}else{body.style.maxHeight='3000px';body.style.padding='0 20px 16px';chev.classList.add('open');}}
+
+// TAB 2: RESPONSIBILITY
+function buildResponsibility(){
+  const grid=document.getElementById('respGrid');
+  const owners=[...new Set(ACTS.map(a=>a.owner))];
+  owners.forEach(owner=>{
+    const oa=ACTS.filter(a=>a.owner===owner);
+    const done=oa.filter(a=>a.status==='✔').length,prog=oa.filter(a=>a.status==='►').length,pend=oa.filter(a=>a.status==='⏳').length;
+    const col=OWNER_COLORS2[owner]||'#6B6F78';
+    const blockCount=oa.filter(a=>a.notes).length;
+    let delRows='';
+    Object.keys(DELIVERABLES).forEach(letter=>{
+      const acts=oa.filter(a=>a.del===letter);if(!acts.length)return;
+      const delColor=DEL_COLORS[letter];
+      const actRows=acts.map(a=>{
+        const isB=!!a.notes;
+        const rc=isB?'resp-act resp-act-blocker':a.status==='✔'?'resp-act resp-act-done':a.status==='►'?'resp-act resp-act-prog':'resp-act resp-act-pend';
+        return `<div class="${rc}"><span class="resp-act-code" style="color:${delColor}">${a.code}</span><span class="resp-act-desc">${a.desc.length>60?a.desc.slice(0,60)+'…':a.desc}</span>${isB?'<span class="blocker-label">BLOCKED</span>':''}<span class="resp-act-status">${a.status}</span><span style="font:600 10px/1 var(--mono);color:var(--muted)">${a.pct}%</span></div>`;
+      }).join('');
+      delRows+=`<div class="resp-del-row"><div class="resp-del-name"><span style="background:${delColor}20;color:${delColor};font:800 9px/1 var(--mono);padding:2px 6px;border-radius:3px">${letter}</span>${DELIVERABLES[letter]}</div><div class="resp-acts">${actRows}</div></div>`;
+    });
+    const blockNote=blockCount>0?`<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font:600 11px/1.4 var(--font);color:#991B1B">⚠️ ${blockCount} blocked activities flagged.</div>`:'';
+    grid.innerHTML+=`<div class="resp-card">
+      <div class="resp-hdr" style="border-bottom:3px solid ${col}">
+        <div class="resp-hdr-left"><div class="resp-hdr-icon" style="background:${col}18;color:${col}">${(OWNER_LABELS[owner]||owner).slice(0,2).toUpperCase()}</div>
+          <div><div class="resp-hdr-name">${OWNER_LABELS[owner]||owner}</div><div class="resp-hdr-sub">${oa.length} activities assigned</div></div></div>
+        <div class="resp-stats"><div class="resp-stat"><div class="resp-stat-val" style="color:var(--green)">${done}</div><div class="resp-stat-lbl">Done</div></div><div class="resp-stat"><div class="resp-stat-val" style="color:var(--amber)">${prog}</div><div class="resp-stat-lbl">Active</div></div><div class="resp-stat"><div class="resp-stat-val" style="color:${blockCount>0?'var(--red)':'var(--grey)'}">${pend}</div><div class="resp-stat-lbl">${blockCount>0?'⚠ Blocked':'Pending'}</div></div></div>
+      </div>
+      <div class="resp-body">${blockNote}${delRows}</div>
+    </div>`;
+  });
+}
+
+// TAB 3: WHERE WE STAND
+function buildStatus(){
+  const grid=document.getElementById('standGrid');
+  const TODAY=new Date('2026-06-21');
+  let delRows='';
+  Object.keys(DELIVERABLES).forEach(letter=>{
+    const acts=ACTS.filter(a=>a.del===letter);
+    const avgPct=Math.round(acts.reduce((s,a)=>s+a.pct,0)/acts.length);
+    const done=acts.filter(a=>a.status==='✔').length,prog=acts.filter(a=>a.status==='►').length,pend=acts.filter(a=>a.status==='⏳').length;
+    const col=DEL_COLORS[letter];
+    delRows+=`<div class="del-progress-row"><span style="background:${col}18;color:${col};font:800 10px/1 var(--mono);width:22px;height:22px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${letter}</span><span style="font:600 11px/1 var(--font);color:var(--charcoal);width:160px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${DELIVERABLES[letter]}</span><div style="flex:1;height:7px;background:#EEE;border-radius:4px;overflow:hidden;margin:0 8px"><div style="height:100%;width:${avgPct}%;background:${col};border-radius:4px"></div></div><span style="font:700 11px/1 var(--mono);color:${col};width:34px;text-align:right;flex-shrink:0">${avgPct}%</span><span style="font:500 9px/1 var(--mono);color:var(--green);width:22px;text-align:right;flex-shrink:0">✔${done}</span><span style="font:500 9px/1 var(--mono);color:var(--amber);width:22px;text-align:right;flex-shrink:0">►${prog}</span><span style="font:500 9px/1 var(--mono);color:var(--grey);width:22px;text-align:right;flex-shrink:0">⏳${pend}</span></div>`;
+  });
+  const blockerActs=ACTS.filter(a=>a.notes);
+  const riskRows=blockerActs.map(a=>{const col=DEL_COLORS[a.del];return `<div class="risk-item"><span class="risk-icon">🔴</span><div class="risk-body"><div class="risk-title">${a.code}: ${a.desc}</div><div class="risk-sub">${a.notes} &middot; Owner: ${OWNER_LABELS[a.owner]||a.owner}</div></div><span class="risk-badge rb-high">HIGH</span></div>`;
+  }).join('')+`<div class="risk-item"><span class="risk-icon">🟡</span><div class="risk-body"><div class="risk-title">Licensing documentation pending</div><div class="risk-sub">Lease, civil defense, engineering drawing &amp; staff papers required (11-Jun escalation)</div></div><span class="risk-badge rb-med">MED</span></div>`;
+  const delayed=ACTS.filter(a=>{if(a.status==='✔'||!a.pEnd)return false;return new Date(a.pEnd)<TODAY;});
+  const delayedRows=delayed.map(a=>{const col=DEL_COLORS[a.del];const endDate=new Date(a.pEnd).toLocaleDateString('en-GB',{day:'2-digit',month:'short'});return `<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;background:#FFF5F5;border:1px solid #FECACA;margin-bottom:5px"><span style="font:800 10px/1 var(--mono);color:var(--red);background:#FEE2E2;padding:2px 6px;border-radius:4px;flex-shrink:0;min-width:32px;text-align:center">${a.code}</span><span style="background:${col}18;color:${col};font:700 9px/1 var(--mono);padding:2px 5px;border-radius:3px;flex-shrink:0">${a.del}</span><span style="font:400 11px/1.3 var(--font);color:#991B1B;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${a.desc}">${a.desc}</span><span style="font:600 10px/1 var(--mono);color:var(--amber);flex-shrink:0">${a.pct}%</span><span style="font:700 9px/1 var(--mono);color:var(--red);background:#FEE2E2;padding:2px 6px;border-radius:4px;flex-shrink:0">Due: ${endDate}</span></div>`;}).join('');
+  const JUNE_END=new Date('2026-06-30');
+  const juneFinal=ACTS.filter(a=>{if(a.status==='✔'||!a.pEnd)return false;const d=new Date(a.pEnd);return d>=TODAY&&d<=JUNE_END;}).sort((a,b)=>new Date(a.pEnd)-new Date(b.pEnd));
+  const juneRows=juneFinal.map(a=>{const col=DEL_COLORS[a.del];const endDate=new Date(a.pEnd).toLocaleDateString('en-GB',{day:'2-digit',month:'short'});return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:#FAFAF9;margin-bottom:4px;border:1px solid var(--border)"><span style="font:800 10px/1 var(--mono);color:${col};background:${col}18;padding:2px 6px;border-radius:4px;flex-shrink:0;min-width:32px;text-align:center">${a.code}</span><span style="font:400 11px/1.3 var(--font);color:var(--charcoal);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${a.desc}">${a.desc}</span><span style="font:600 10px/1 var(--mono);color:var(--amber);flex-shrink:0;width:30px;text-align:right">${a.pct}%</span><span style="font:700 9px/1 var(--mono);color:var(--muted);flex-shrink:0;width:46px;text-align:right">${endDate}</span><span style="font:700 9px/1 var(--mono);padding:2px 6px;border-radius:8px;flex-shrink:0;background:${(OWNER_COLORS2[a.owner]||'#6B6F78')}18;color:${OWNER_COLORS2[a.owner]||'#6B6F78'}">${OWNER_LABELS[a.owner]||a.owner}</span></div>`;}).join('');
+
+  // Dept performance card (full-width, 3rd row)
+  const owners=[...new Set(ACTS.map(a=>a.owner))];
+  const deptPerf=owners.map(owner=>{
+    const da=ACTS.filter(a=>a.owner===owner);const n=da.length;
+    const d2=da.filter(a=>a.status==='✔').length,p2=da.filter(a=>a.status==='►').length,pe=da.filter(a=>a.status==='⏳').length;
+    const lateActs=da.filter(a=>{if(a.status==='✔'||!a.pEnd)return false;return new Date(a.pEnd)<TODAY;});
+    const maxDL=lateActs.reduce((m,a)=>{const d=Math.round((TODAY-new Date(a.pEnd))/86400000);return Math.max(m,d);},0);
+    const avgPct=Math.round(da.reduce((s,a)=>s+a.pct,0)/n);
+    return {owner,n,done:d2,prog:p2,pend:pe,late:lateActs.length,maxDL,avgPct};
+  }).sort((a,b)=>b.late-a.late||b.maxDL-a.maxDL);
+  const deptPerfRows=deptPerf.map(d=>{
+    const col=OWNER_COLORS2[d.owner]||'#6B6F78';const hasLate=d.late>0;
+    const lb=hasLate?`<span class="dept-perf-late-badge" style="background:#FEE2E2;color:#991B1B">🔴 ${d.late} late &middot; up to ${d.maxDL}d</span>`:`<span class="dept-perf-late-badge" style="background:var(--green-bg);color:var(--green)">✔ On track</span>`;
+    return `<div class="dept-perf-row ${hasLate?'has-late':''}"><div class="dept-perf-icon" style="background:${col}18;color:${col}">${(OWNER_LABELS[d.owner]||d.owner).slice(0,2).toUpperCase()}</div><span class="dept-perf-name">${OWNER_LABELS[d.owner]||d.owner}</span><div class="dept-perf-bar-track"><div class="dept-perf-seg-done" style="width:${d.done/d.n*100}%"></div><div class="dept-perf-seg-prog" style="width:${d.prog/d.n*100}%"></div><div class="dept-perf-seg-pend" style="width:${d.pend/d.n*100}%"></div></div><span class="dept-perf-stat" style="color:${col}">${d.avgPct}%</span><span style="font:500 9px/1 var(--mono);color:var(--muted);width:30px;text-align:right;flex-shrink:0">${d.n} act</span>${lb}</div>`;
+  }).join('');
+  const totalLateDepts=deptPerf.filter(d=>d.late>0).length;
+
+  grid.innerHTML=`
+  <div class="stand-card"><div class="stand-title">📊 Deliverable Progress</div>${delRows}</div>
+  <div class="stand-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font:700 12px/1 var(--font);color:var(--charcoal)">⏰ Delayed Activities</span><span style="font:700 11px/1 var(--mono);color:var(--red);background:#FEE2E2;padding:3px 10px;border-radius:10px">${delayed.length} overdue</span></div><div style="font:400 10px/1.3 var(--font);color:var(--muted);margin-bottom:10px">Planned end passed before 21-Jun-2026 · still open</div>${delayedRows||'<div style="text-align:center;color:var(--muted);font-size:11px;padding:20px 0">No delayed activities 🎉</div>'}</div>
+  <div class="stand-card" style="overflow-y:auto;max-height:580px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font:700 12px/1 var(--font);color:var(--charcoal)">📌 Must Finalize — Before 30-Jun</span><span style="font:700 11px/1 var(--mono);color:var(--amber);background:var(--amber-bg);padding:3px 10px;border-radius:10px">${juneFinal.length} activities</span></div><div style="font:400 10px/1.3 var(--font);color:var(--muted);margin-bottom:10px">Planned end 21–30 Jun · not completed</div>${juneRows||'<div style="text-align:center;color:var(--muted);font-size:11px;padding:20px 0">Nothing due this window</div>'}</div>
+  <div class="stand-card" style="grid-column:1 / -1"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font:700 12px/1 var(--font);color:var(--charcoal)">🏢 Department Performance — Who's Late?</span><span style="font:700 11px/1 var(--mono);color:${totalLateDepts>0?'var(--red)':'var(--green)'};background:${totalLateDepts>0?'#FEE2E2':'var(--green-bg)'};padding:3px 10px;border-radius:10px">${totalLateDepts>0?totalLateDepts+' dept(s) with late items':'All departments on track'}</span></div><div style="font:400 10px/1.3 var(--font);color:var(--muted);margin-bottom:12px">Bar shows ✔ Done / ► Active / ⏳ Pending per department · flags activities whose planned end date has passed</div>${deptPerfRows}</div>`;
+}
+
+// Slicer state
+const activeFilters={month:'all',status:'all',owner:'all',del:'all',cat:'all'};
+function applyFilter(type,val,btn){
+  if(activeFilters[type]===val&&val!=='all'){activeFilters[type]='all';document.querySelectorAll(`[data-filter="${type}"]`).forEach(b=>{b.classList.remove('active');if(b.dataset.val==='all')b.classList.add('active');});}
+  else{activeFilters[type]=val;document.querySelectorAll(`[data-filter="${type}"]`).forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  applyAllFilters();
+}
+function resetFilters(){Object.keys(activeFilters).forEach(k=>activeFilters[k]='all');document.querySelectorAll('.slicer-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.val==='all')b.classList.add('active');});applyAllFilters();}
+function applyAllFilters(){
+  let visible=0;
+  document.querySelectorAll('.act-table tbody tr').forEach(tr=>{
+    const code=tr.querySelector('.code-badge')?.textContent||'';
+    const act=ACTS.find(a=>a.code===code);if(!act){tr.classList.remove('act-row-hidden');return;}
+    const ok=( (activeFilters.month==='all'||act.month===activeFilters.month)&&(activeFilters.status==='all'||act.status===activeFilters.status)&&(activeFilters.owner==='all'||act.owner===activeFilters.owner)&&(activeFilters.del==='all'||act.del===activeFilters.del)&&(activeFilters.cat==='all'||act.cat===activeFilters.cat));
+    tr.classList.toggle('act-row-hidden',!ok);if(ok)visible++;
+  });
+  document.querySelectorAll('.month-block').forEach(block=>{
+    const hasV=block.querySelectorAll('tbody tr:not(.act-row-hidden)').length>0;
+    let em=block.querySelector('.month-empty');
+    if(!hasV){if(!em){em=document.createElement('div');em.className='month-empty';em.textContent='No activities match the current filters.';block.querySelector('.month-body').appendChild(em);}em.style.display='block';block.classList.remove('month-block-hidden');}
+    else{if(em)em.style.display='none';block.classList.toggle('month-block-hidden',false);}
+  });
+  document.getElementById('slicerCount').textContent=visible+' / 61 activities';
+}
+
+buildMonthly();
+buildResponsibility();
+buildStatus();
+</script>
+</body>
+</html>
